@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.pipes.additive_connectives_tagger</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.pipes.html"><font color="#ffffff">pipes</font></a>.additive_connectives_tagger</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Proyectos/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/additive_connectives_tagger.py">/home/hans/Proyectos/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/additive_connectives_tagger.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.pipes.additive_connectives_tagger.html#AdditiveConnectivesTagger">AdditiveConnectivesTagger</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AdditiveConnectivesTagger">class <strong>AdditiveConnectivesTagger</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#AdditiveConnectivesTagger">AdditiveConnectivesTagger</a>(nlp,&nbsp;language:&nbsp;str&nbsp;=&nbsp;'es')&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;tagger&nbsp;has&nbsp;the&nbsp;task&nbsp;to&nbsp;find&nbsp;all&nbsp;additive&nbsp;connectives&nbsp;in&nbsp;a&nbsp;document.&nbsp;It&nbsp;needs&nbsp;to&nbsp;go&nbsp;after&nbsp;the&nbsp;'Tagger'&nbsp;pipeline&nbsp;component.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AdditiveConnectivesTagger-__call__"><strong>__call__</strong></a>(self, doc: spacy.tokens.doc.Doc) -&gt; spacy.tokens.doc.Doc</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;find&nbsp;all&nbsp;additive&nbsp;connectives&nbsp;and&nbsp;store&nbsp;them&nbsp;in&nbsp;an&nbsp;iterable.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;A&nbsp;Spacy&nbsp;document.</tt></dd></dl>
+
+<dl><dt><a name="AdditiveConnectivesTagger-__init__"><strong>__init__</strong></a>(self, nlp, language: str = 'es') -&gt; None</dt><dd><tt>This&nbsp;constructor&nbsp;will&nbsp;initialize&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;tags&nbsp;additive&nbsp;connectives.<br>
+&nbsp;<br>
+Parameters:<br>
+nlp:&nbsp;The&nbsp;Spacy&nbsp;model&nbsp;to&nbsp;use&nbsp;this&nbsp;tagger&nbsp;with.<br>
+language:&nbsp;The&nbsp;language&nbsp;that&nbsp;this&nbsp;pipeline&nbsp;will&nbsp;be&nbsp;used&nbsp;in.<br>
+&nbsp;<br>
+Returns:<br>
+None.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>name</strong> = 'additive connective tagger'</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><strong>additive_connectives_getter</strong> <em>lambda</em> doc</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCEPTED_LANGUAGES</strong> = {'es': 'es_core_news_lg'}</td></tr></table>
+</body></html>

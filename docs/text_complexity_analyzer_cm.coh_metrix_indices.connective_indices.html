@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.coh_metrix_indices.connective_indices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.coh_metrix_indices.html"><font color="#ffffff">coh_metrix_indices</font></a>.connective_indices</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Proyectos/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/coh_metrix_indices/connective_indices.py">/home/hans/Proyectos/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/coh_metrix_indices/connective_indices.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="multiprocessing.html">multiprocessing</a><br>
+</td><td width="25%" valign=top><a href="pyphen.html">pyphen</a><br>
+</td><td width="25%" valign=top><a href="spacy.html">spacy</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.coh_metrix_indices.connective_indices.html#ConnectiveIndices">ConnectiveIndices</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ConnectiveIndices">class <strong>ConnectiveIndices</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#ConnectiveIndices">ConnectiveIndices</a>(nlp,&nbsp;language:&nbsp;str&nbsp;=&nbsp;'es',&nbsp;descriptive_indices:&nbsp;text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices.DescriptiveIndices&nbsp;=&nbsp;None)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;will&nbsp;handle&nbsp;all&nbsp;operations&nbsp;to&nbsp;obtain&nbsp;the&nbsp;connective&nbsp;indices&nbsp;of&nbsp;a&nbsp;text&nbsp;according&nbsp;to&nbsp;Coh-Metrix<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ConnectiveIndices-__init__"><strong>__init__</strong></a>(self, nlp, language: str = 'es', descriptive_indices: text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices.DescriptiveIndices = None) -&gt; None</dt><dd><tt>The&nbsp;constructor&nbsp;will&nbsp;initialize&nbsp;this&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;calculates&nbsp;the&nbsp;connective&nbsp;indices&nbsp;for&nbsp;a&nbsp;specific&nbsp;language&nbsp;of&nbsp;those&nbsp;that&nbsp;are&nbsp;available.<br>
+&nbsp;<br>
+Parameters:<br>
+nlp:&nbsp;The&nbsp;spacy&nbsp;model&nbsp;that&nbsp;corresponds&nbsp;to&nbsp;a&nbsp;language.<br>
+language(str):&nbsp;The&nbsp;language&nbsp;that&nbsp;the&nbsp;texts&nbsp;to&nbsp;process&nbsp;will&nbsp;have.<br>
+&nbsp;<br>
+Returns:<br>
+None.</tt></dd></dl>
+
+<dl><dt><a name="ConnectiveIndices-get_additive_connectives_incidence"><strong>get_additive_connectives_incidence</strong></a>(self, text: str, word_count: int = None, workers: int = -1) -&gt; float</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;incidence&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words&nbsp;for&nbsp;additive&nbsp;connectives.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+word_count(int):&nbsp;The&nbsp;amount&nbsp;of&nbsp;words&nbsp;in&nbsp;the&nbsp;text.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+float:&nbsp;The&nbsp;incidence&nbsp;of&nbsp;additive&nbsp;connectives&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words.</tt></dd></dl>
+
+<dl><dt><a name="ConnectiveIndices-get_adversative_connectives_incidence"><strong>get_adversative_connectives_incidence</strong></a>(self, text: str, word_count: int = None, workers: int = -1) -&gt; float</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;incidence&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words&nbsp;for&nbsp;adversative&nbsp;connectives.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+word_count(int):&nbsp;The&nbsp;amount&nbsp;of&nbsp;words&nbsp;in&nbsp;the&nbsp;text.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+float:&nbsp;The&nbsp;incidence&nbsp;of&nbsp;adversative&nbsp;connectives&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words.</tt></dd></dl>
+
+<dl><dt><a name="ConnectiveIndices-get_all_connectives_incidence"><strong>get_all_connectives_incidence</strong></a>(self, text: str, word_count: int = None, workers: int = -1) -&gt; float</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;incidence&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words&nbsp;for&nbsp;all&nbsp;connectives.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+word_count(int):&nbsp;The&nbsp;amount&nbsp;of&nbsp;words&nbsp;in&nbsp;the&nbsp;text.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+float:&nbsp;The&nbsp;incidence&nbsp;of&nbsp;all&nbsp;connectives&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words.</tt></dd></dl>
+
+<dl><dt><a name="ConnectiveIndices-get_causal_connectives_incidence"><strong>get_causal_connectives_incidence</strong></a>(self, text: str, word_count: int = None, workers: int = -1) -&gt; float</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;incidence&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words&nbsp;for&nbsp;causal&nbsp;connectives.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+word_count(int):&nbsp;The&nbsp;amount&nbsp;of&nbsp;words&nbsp;in&nbsp;the&nbsp;text.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+float:&nbsp;The&nbsp;incidence&nbsp;of&nbsp;causal&nbsp;connectives&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words.</tt></dd></dl>
+
+<dl><dt><a name="ConnectiveIndices-get_logical_connectives_incidence"><strong>get_logical_connectives_incidence</strong></a>(self, text: str, word_count: int = None, workers: int = -1) -&gt; float</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;incidence&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words&nbsp;for&nbsp;logical&nbsp;connectives.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+word_count(int):&nbsp;The&nbsp;amount&nbsp;of&nbsp;words&nbsp;in&nbsp;the&nbsp;text.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+float:&nbsp;The&nbsp;incidence&nbsp;of&nbsp;logical&nbsp;connectives&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words.</tt></dd></dl>
+
+<dl><dt><a name="ConnectiveIndices-get_temporal_connectives_incidence"><strong>get_temporal_connectives_incidence</strong></a>(self, text: str, word_count: int = None, workers: int = -1) -&gt; float</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;incidence&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words&nbsp;for&nbsp;temporal&nbsp;connectives.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+word_count(int):&nbsp;The&nbsp;amount&nbsp;of&nbsp;words&nbsp;in&nbsp;the&nbsp;text.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+float:&nbsp;The&nbsp;incidence&nbsp;of&nbsp;temporal&nbsp;connectives&nbsp;per&nbsp;{self.<strong>_incidence</strong>}&nbsp;words.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCEPTED_LANGUAGES</strong> = {'es': 'es_core_news_lg'}<br>
+<strong>Callable</strong> = typing.Callable<br>
+<strong>List</strong> = typing.List</td></tr></table>
+</body></html>

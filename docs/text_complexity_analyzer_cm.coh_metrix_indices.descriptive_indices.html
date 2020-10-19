@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.coh_metrix_indices.html"><font color="#ffffff">coh_metrix_indices</font></a>.descriptive_indices</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Proyectos/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/coh_metrix_indices/descriptive_indices.py">/home/hans/Proyectos/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/coh_metrix_indices/descriptive_indices.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="multiprocessing.html">multiprocessing</a><br>
+</td><td width="25%" valign=top><a href="spacy.html">spacy</a><br>
+</td><td width="25%" valign=top><a href="statistics.html">statistics</a><br>
+</td><td width="25%" valign=top><a href="string.html">string</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices.html#DescriptiveIndices">DescriptiveIndices</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="DescriptiveIndices">class <strong>DescriptiveIndices</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#DescriptiveIndices">DescriptiveIndices</a>(nlp,&nbsp;language:&nbsp;str&nbsp;=&nbsp;'es')&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;will&nbsp;handle&nbsp;all&nbsp;operations&nbsp;to&nbsp;obtain&nbsp;the&nbsp;descriptive&nbsp;indices&nbsp;of&nbsp;a&nbsp;text&nbsp;according&nbsp;to&nbsp;Coh-Metrix<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="DescriptiveIndices-__init__"><strong>__init__</strong></a>(self, nlp, language: str = 'es') -&gt; None</dt><dd><tt>The&nbsp;constructor&nbsp;will&nbsp;initialize&nbsp;this&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;calculates&nbsp;the&nbsp;descriptive&nbsp;indices&nbsp;for&nbsp;a&nbsp;specific&nbsp;language&nbsp;of&nbsp;those&nbsp;that&nbsp;are&nbsp;available.<br>
+&nbsp;<br>
+Parameters:<br>
+nlp:&nbsp;The&nbsp;spacy&nbsp;model&nbsp;that&nbsp;corresponds&nbsp;to&nbsp;a&nbsp;language.<br>
+language(str):&nbsp;The&nbsp;language&nbsp;that&nbsp;the&nbsp;texts&nbsp;to&nbsp;process&nbsp;will&nbsp;have.<br>
+&nbsp;<br>
+Returns:<br>
+None.</tt></dd></dl>
+
+<dl><dt><a name="DescriptiveIndices-get_length_of_paragraphs"><strong>get_length_of_paragraphs</strong></a>(self, text: str, workers: int = -1) -&gt; text_complexity_analyzer_cm.utils.statistics_results.StatisticsResults</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;average&nbsp;amount&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;sentences&nbsp;in&nbsp;each&nbsp;paragraph.<br>
+&nbsp;<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;anaylized.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+StatisticsResults:&nbsp;The&nbsp;mean&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;the&nbsp;amount&nbsp;in&nbsp;sentences&nbsp;in&nbsp;each&nbsp;paragraph.</tt></dd></dl>
+
+<dl><dt><a name="DescriptiveIndices-get_length_of_sentences"><strong>get_length_of_sentences</strong></a>(self, text: str, workers: int = -1) -&gt; text_complexity_analyzer_cm.utils.statistics_results.StatisticsResults</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;average&nbsp;amount&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;words&nbsp;in&nbsp;each&nbsp;sentence.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;anaylized.<br>
+language(str):&nbsp;The&nbsp;language&nbsp;of&nbsp;the&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+StatisticsResults:&nbsp;The&nbsp;mean&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;the&nbsp;amount&nbsp;in&nbsp;words&nbsp;in&nbsp;each&nbsp;sentence.</tt></dd></dl>
+
+<dl><dt><a name="DescriptiveIndices-get_length_of_words"><strong>get_length_of_words</strong></a>(self, text: str, workers: int = -1) -&gt; text_complexity_analyzer_cm.utils.statistics_results.StatisticsResults</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;average&nbsp;amount&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;letters&nbsp;in&nbsp;each&nbsp;word.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;anaylized.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+StatisticsResults:&nbsp;The&nbsp;mean&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;the&nbsp;amount&nbsp;in&nbsp;letters&nbsp;in&nbsp;each&nbsp;word.</tt></dd></dl>
+
+<dl><dt><a name="DescriptiveIndices-get_paragraph_count_from_text"><strong>get_paragraph_count_from_text</strong></a>(self, text: str) -&gt; int</dt><dd><tt>This&nbsp;method&nbsp;counts&nbsp;how&nbsp;many&nbsp;paragarphs&nbsp;are&nbsp;there&nbsp;in&nbsp;a&nbsp;text<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;The&nbsp;amount&nbsp;of&nbsp;paragraphs&nbsp;in&nbsp;a&nbsp;text</tt></dd></dl>
+
+<dl><dt><a name="DescriptiveIndices-get_sentence_count_from_text"><strong>get_sentence_count_from_text</strong></a>(self, text: str, workers: int = -1) -&gt; int</dt><dd><tt>This&nbsp;method&nbsp;counts&nbsp;how&nbsp;many&nbsp;sentences&nbsp;a&nbsp;text&nbsp;has.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;The&nbsp;amount&nbsp;of&nbsp;sentences.</tt></dd></dl>
+
+<dl><dt><a name="DescriptiveIndices-get_syllables_per_word"><strong>get_syllables_per_word</strong></a>(self, text: str, workers=-1) -&gt; text_complexity_analyzer_cm.utils.statistics_results.StatisticsResults</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;average&nbsp;amount&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;syllables&nbsp;in&nbsp;each&nbsp;word.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;anaylized.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+StatisticsResults:&nbsp;The&nbsp;mean&nbsp;and&nbsp;standard&nbsp;deviation&nbsp;of&nbsp;the&nbsp;amount&nbsp;in&nbsp;syllables&nbsp;in&nbsp;each&nbsp;word.</tt></dd></dl>
+
+<dl><dt><a name="DescriptiveIndices-get_word_count_from_text"><strong>get_word_count_from_text</strong></a>(self, text: str, workers: int = -1) -&gt; int</dt><dd><tt>This&nbsp;method&nbsp;counts&nbsp;how&nbsp;many&nbsp;words&nbsp;a&nbsp;text&nbsp;has.<br>
+&nbsp;<br>
+Parameters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;be&nbsp;anaylized.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;The&nbsp;amount&nbsp;of&nbsp;words.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCEPTED_LANGUAGES</strong> = {'es': 'es_core_news_lg'}<br>
+<strong>Callable</strong> = typing.Callable<br>
+<strong>LANGUAGES_DICTIONARY_PYPHEN</strong> = {'es': 'es'}<br>
+<strong>List</strong> = typing.List</td></tr></table>
+</body></html>

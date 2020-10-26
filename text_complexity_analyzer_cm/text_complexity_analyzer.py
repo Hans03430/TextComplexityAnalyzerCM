@@ -335,5 +335,3 @@ class TextComplexityAnalyzer:
                 indices_values = [[metrics[key] for key in indices]]
                     
                 return classifier.predict(indices_values if scaler is None else scaler.transform(indices_values))
-
-            print(indices_values)

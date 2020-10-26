@@ -12,4 +12,4 @@ LANGUAGES_DICTIONARY_PYPHEN = {
     'es': 'es'
 }
 
-BASE_DIRECTORY = os.path.dirname(os.path.abspath(__file__)).replace('/text_complexity_analyzer_cm', '')
+BASE_DIRECTORY = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]

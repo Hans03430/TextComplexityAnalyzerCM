@@ -13,7 +13,7 @@ setup(
         'Pyphen',
         'scikit-learn'
     ],
-    package=['model'],
+    packages=['model'],
     package_dir={'model': 'text_complexity_analyzer_cm/model'},
     package_data={'model': ['*.pkl']}
 )

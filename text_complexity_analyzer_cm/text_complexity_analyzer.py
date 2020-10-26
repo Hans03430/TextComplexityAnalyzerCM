@@ -334,4 +334,4 @@ class TextComplexityAnalyzer:
             else: # Indices used by the custom classifier
                 indices_values = [[metrics[key] for key in indices]]
                     
-                return classifier.predict(indices_values if scaler is None else scaler.transform(indices_values))
+                return list(classifier.predict(indices_values if scaler is None else scaler.transform(indices_values)))

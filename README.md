@@ -1,5 +1,5 @@
-Para procesar el texto se utilizó la librería "Spacy". Es necesario instalar los paquetes de idiomas siguientes: "Español"
-Para ello, usar los siguientes comandos:
+# Idiomas soportados
+Para procesar el texto se utilizó la librería "Spacy". Es necesario instalar los paquetes de idiomas siguientes: "Español", el único idioma soportado hasta el momento. Para ello, usar los siguientes comandos:
 
 python -m spacy download es_core_news_lg
 

@@ -79,4 +79,4 @@ De las 45 métricas a implementar originalmente, se implementarán 48. Aquí est
     * CNCAll: Incidencia de todos los conectivos.
     
 # Índices no implementados
-Se implementaron todos los indices establecidos.
+Se implementaron todos los 48 indices que se iban a implementar.

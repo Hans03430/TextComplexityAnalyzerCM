@@ -1,29 +1,12 @@
+import multiprocessing
 import pickle
 import spacy
 import time
 
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from text_complexity_analyzer_cm.constants import BASE_DIRECTORY
-from text_complexity_analyzer_cm.coh_metrix_indices.connective_indices import ConnectiveIndices
-from text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices import DescriptiveIndices
-from text_complexity_analyzer_cm.coh_metrix_indices.lexical_diversity_indices import LexicalDiversityIndices
-from text_complexity_analyzer_cm.coh_metrix_indices.readability_indices import ReadabilityIndices
-from text_complexity_analyzer_cm.coh_metrix_indices.referential_cohesion_indices import ReferentialCohesionIndices
-from text_complexity_analyzer_cm.coh_metrix_indices.syntactic_complexity_indices import SyntacticComplexityIndices
-from text_complexity_analyzer_cm.coh_metrix_indices.syntactic_pattern_density_indices import SyntacticPatternDensityIndices
-from text_complexity_analyzer_cm.coh_metrix_indices.word_information_indices import WordInformationIndices
-from text_complexity_analyzer_cm.pipes.negative_expression_tagger import NegativeExpressionTagger
-from text_complexity_analyzer_cm.pipes.noun_phrase_tagger import NounPhraseTagger
-from text_complexity_analyzer_cm.pipes.syllable_splitter import SyllableSplitter
-from text_complexity_analyzer_cm.pipes.verb_phrase_tagger import VerbPhraseTagger
-from text_complexity_analyzer_cm.pipes.causal_connectives_tagger import CausalConnectivesTagger
-from text_complexity_analyzer_cm.pipes.logical_connectives_tagger import LogicalConnectivesTagger
-from text_complexity_analyzer_cm.pipes.adversative_connectives_tagger import AdversativeConnectivesTagger
-from text_complexity_analyzer_cm.pipes.temporal_connectives_tagger import TemporalConnectivesTagger
-from text_complexity_analyzer_cm.pipes.additive_connectives_tagger import AdditiveConnectivesTagger
-from text_complexity_analyzer_cm.pipes.referential_cohesion_adjacent_sentences_analyzer import ReferentialCohesionAdjacentSentencesAnalyzer
-from text_complexity_analyzer_cm.pipes.referential_cohesion_all_sentences_analyzer import ReferentialCohesionAllSentencesAnalyzer
-from text_complexity_analyzer_cm.pipes.feature_counter import FeatureCounter
+from text_complexity_analyzer_cm.pipes.spanish.factory import *
+
 from typing import Dict
 from typing import List
 from typing import Tuple
@@ -48,12 +31,14 @@ class TextComplexityAnalyzer:
 
     The example uses the default classifier stored along the library.
     '''
-    def __init__(self, language:str = 'es') -> None:
+    def __init__(self, language:str = 'es', load_classifier=True, paragraph_separator: str='\n\n') -> None:
         '''
-        This constructor initializes the analizer for a specific language.
+        This constructor initializes the analizer for a specific language. It initializes all used pipes forthe analysis.
 
         Parameters:
         language(str): The language that the texts are in.
+        load_classifier(bool): Flag to load the default prediction model or not.
+        paragraph_separator(str): Separator to consider for the paragraphs.
         
         Returns:
         None.
@@ -64,32 +49,21 @@ class TextComplexityAnalyzer:
         self.language = language
         self._nlp = spacy.load(ACCEPTED_LANGUAGES[language], disable=['ner'])
         self._nlp.max_length = 3000000
-        self._nlp.add_pipe(self._nlp.create_pipe('sentencizer'))
-        self._nlp.add_pipe(SyllableSplitter(language), after='tagger')
-        self._nlp.add_pipe(NounPhraseTagger(language), after='parser')
-        self._nlp.add_pipe(VerbPhraseTagger(self._nlp, language), after='tagger')
-        self._nlp.add_pipe(NegativeExpressionTagger(self._nlp, language), after='tagger')
-        self._nlp.add_pipe(CausalConnectivesTagger(self._nlp, language), after='tagger')
-        self._nlp.add_pipe(LogicalConnectivesTagger(self._nlp, language), after='tagger')
-        self._nlp.add_pipe(AdversativeConnectivesTagger(self._nlp, language), after='tagger')
-        self._nlp.add_pipe(TemporalConnectivesTagger(self._nlp, language), after='tagger')
-        self._nlp.add_pipe(AdditiveConnectivesTagger(self._nlp, language), after='tagger')
-        self._nlp.add_pipe(ReferentialCohesionAdjacentSentencesAnalyzer(language), after='sentencizer')
-        self._nlp.add_pipe(ReferentialCohesionAllSentencesAnalyzer(language), after='sentencizer')
-        self._nlp.add_pipe(FeatureCounter(language), last=True)
-        self._di = DescriptiveIndices(language=language, nlp=self._nlp)
-        self._spdi = SyntacticPatternDensityIndices(language=language, nlp=self._nlp, descriptive_indices=self._di)
-        self._wii = WordInformationIndices(language=language, nlp=self._nlp, descriptive_indices=self._di)
-        self._sci = SyntacticComplexityIndices(language=language, nlp=self._nlp)
-        self._ci = ConnectiveIndices(language=language, nlp=self._nlp, descriptive_indices=self._di)
-        self._ldi = LexicalDiversityIndices(language=language, nlp=self._nlp)
-        self._ri = ReadabilityIndices(language=language, nlp=self._nlp, descriptive_indices=self._di)
-        self._rci = ReferentialCohesionIndices(language=language, nlp=self._nlp)
+        self._nlp.add_pipe('sentencizer')
+        self._nlp.add_pipe('alphanumeric_word_identifier')
+        
+        # Load default classifier if enabled
+        if load_classifier:
+            self.load_default_classifier()
 
-        # Load default classifier
+        self._indices = ['CNCADC', 'CNCAdd', 'CNCAll', 'CNCCaus', 'CNCLogic', 'CNCTemp', 'CRFANP1', 'CRFANPa', 'CRFAO1', 'CRFAOa', 'CRFCWO1', 'CRFCWO1d', 'CRFCWOa', 'CRFCWOad', 'CRFNO1', 'CRFNOa', 'CRFSO1', 'CRFSOa', 'DESPC', 'DESPL', 'DESPLd', 'DESSC', 'DESSL', 'DESSLd', 'DESWC', 'DESWLlt', 'DESWLltd', 'DESWLsy', 'DESWLsyd', 'DRNEG', 'DRNP', 'DRVP', 'LDTTRa', 'LDTTRcw', 'RDFHGL', 'SYNLE', 'SYNNP', 'WRDADJ', 'WRDADV', 'WRDNOUN', 'WRDPRO', 'WRDPRP1p', 'WRDPRP1s', 'WRDPRP2p', 'WRDPRP2s', 'WRDPRP3p', 'WRDPRP3s', 'WRDVERB']
+
+    def load_default_classifier(self) -> None:
+        '''
+        Method that loads the default classifier used to calculate the text complexity of new texts.
+        '''
         self._classifier = pickle.load(open(f'{BASE_DIRECTORY}/model/classifier.pkl', 'rb'))
         self._scaler = pickle.load(open(f'{BASE_DIRECTORY}/model/scaler.pkl', 'rb'))
-        self._indices = ['CNCADC', 'CNCAdd', 'CNCAll', 'CNCCaus', 'CNCLogic', 'CNCTemp', 'CRFANP1', 'CRFANPa', 'CRFAO1', 'CRFAOa', 'CRFCWO1', 'CRFCWO1d', 'CRFCWOa', 'CRFCWOad', 'CRFNO1', 'CRFNOa', 'CRFSO1', 'CRFSOa', 'DESPC', 'DESPL', 'DESPLd', 'DESSC', 'DESSL', 'DESSLd', 'DESWC', 'DESWLlt', 'DESWLltd', 'DESWLsy', 'DESWLsyd', 'DRNEG', 'DRNP', 'DRVP', 'LDTTRa', 'LDTTRcw', 'RDFHGL', 'SYNLE', 'SYNNP', 'WRDADJ', 'WRDADV', 'WRDNOUN', 'WRDPRO', 'WRDPRP1p', 'WRDPRP1s', 'WRDPRP2p', 'WRDPRP2s', 'WRDPRP3p', 'WRDPRP3s', 'WRDVERB']
 
 
     def calculate_descriptive_indices_for_one_text(self, text: str, workers: int=-1) -> Dict:
@@ -272,36 +246,30 @@ class TextComplexityAnalyzer:
 
         return indices
 
-    def calculate_all_indices_for_one_text(self, text: str, workers: int=-1) -> Tuple[Dict, Dict, Dict, Dict, Dict, Dict, Dict, Dict]:
+    def calculate_all_indices_for_texts(self, texts: List[str], workers: int=-1) -> List[Dict]:
         '''
-        This method calculates the referential cohesion indices and stores them in a dictionary.
+        This method calculates all indices for a list of texts using multiprocessing, if available, and stores them in a list of dictionaries.
 
         Parameters:
-        text(str): The text to be analyzed.
+        texts(List[str]): The texts to be analyzed.
         workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
 
         Returns:
-        (Dict, Dict, Dict, Dict, Dict, Dict, Dict, Dict): The dictionary with the all the indices.
+        List[Dict]: A list with the dictionaries containing the indices for all texts sent for analysis.
         '''
         if workers == 0 or workers < -1:
             raise ValueError('Workers must be -1 or any positive number greater than 0.')
         else:
+            print('Analyzing texts.')
             start = time.time()
-            descriptive = self.calculate_descriptive_indices_for_one_text(text=text, workers=workers)
-            word_count = descriptive['DESWC']                
-            mean_words_per_sentence = descriptive['DESSL']
-            mean_syllables_per_word = descriptive['DESWLsy']
-            word_information = self.calculate_word_information_indices_for_one_text(text=text, workers=workers, word_count=word_count)
-            syntactic_pattern = self.calculate_syntactic_pattern_density_indices_for_one_text(text=text, workers=workers, word_count=word_count)
-            syntactic_complexity = self.calculate_syntactic_complexity_indices_for_one_text(text=text, workers=workers)
-            connective = self.calculate_connective_indices_for_one_text(text=text, workers=workers, word_count=word_count)
-            lexical_diversity = self.calculate_lexical_diversity_indices_for_one_text(text=text, workers=workers)
-            readability = self.calculate_readability_indices_for_one_text(text, workers=workers, mean_words_per_sentence=mean_words_per_sentence, mean_syllables_per_word=mean_syllables_per_word)
-            referential_cohesion = self.calculate_referential_cohesion_indices_for_one_text(text=text, workers=workers)
-            end = time.time()
-            print(f'Text analyzed in {end - start} seconds.')
+            threads = multiprocessing.cpu_count() if workers == -1 else workers  
+            # Process all texts using multiprocessing
+            for doc in self._nlp.pipe(texts, batch_size=threads, n_process=threads):
+                print(len(doc._.alpha_words))
 
-            return descriptive, word_information, syntactic_pattern, syntactic_complexity, connective, lexical_diversity, readability, referential_cohesion
+            end = time.time()
+            print(f'Texts analyzed in {end - start} seconds.')
+
 
     def predict_text_category(self, text: str, workers: int=-1, classifier=None, scaler=None, indices: List=None) -> int:
         '''
@@ -330,8 +298,12 @@ class TextComplexityAnalyzer:
             metrics = {**descriptive, **word_information, **syntactic_pattern, **syntactic_complexity, **connective, **lexical_diversity, **readability, **referential_cohesion}
             if classifier is None: # Default indices
                 indices_values = [[metrics[key] for key in self._indices]]
+                # Check that the classifier was loaded
+                if self._classifier is None:
+                    raise AttributeError('The default classifier was not loaded when this object was created.')
+                else:
+                    return self._classifier.predict(self._scaler.transform(indices_values))
 
-                return self._classifier.predict(self._scaler.transform(indices_values))
             else: # Indices used by the custom classifier
                 indices_values = [[metrics[key] for key in indices]]
                     

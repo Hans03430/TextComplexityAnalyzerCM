@@ -1,3 +1,6 @@
+# Consideraciones antes de usar
+La rama Master se considera desfasada. Usar la rama Production, la cual contará con actualizaciones de la aplicación. La rama Master existe para mantener compatibilidad con el proyecto de tesis que originó este módulo de Python.
+
 # Idiomas soportados
 Para procesar el texto se utilizó la librería "Spacy". Es necesario instalar los paquetes de idiomas siguientes: "Español", el único idioma soportado hasta el momento. Para ello, usar los siguientes comandos:
 

@@ -26,6 +26,7 @@ from text_complexity_analyzer_cm.pipes.referential_cohesion_all_sentences_analyz
 from text_complexity_analyzer_cm.pipes.feature_counter import FeatureCounter
 from typing import Dict
 from typing import List
+from typing import Tuple
 
 
 class TextComplexityAnalyzer:
@@ -271,7 +272,7 @@ class TextComplexityAnalyzer:
 
         return indices
 
-    def calculate_all_indices_for_one_text(self, text: str, workers: int=-1) -> (Dict, Dict, Dict, Dict, Dict, Dict, Dict, Dict):
+    def calculate_all_indices_for_one_text(self, text: str, workers: int=-1) -> Tuple[Dict, Dict, Dict, Dict, Dict, Dict, Dict, Dict]:
         '''
         This method calculates the referential cohesion indices and stores them in a dictionary.
 

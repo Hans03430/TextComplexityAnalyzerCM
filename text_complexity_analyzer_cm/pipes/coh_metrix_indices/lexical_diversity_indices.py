@@ -1,7 +1,5 @@
-import multiprocessing
-import spacy
-import string
-
+from spacy.language import Language
+from spacy.tokens import Doc
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from text_complexity_analyzer_cm.utils.utils import is_content_word
 from text_complexity_analyzer_cm.utils.utils import is_word
@@ -11,75 +9,66 @@ class LexicalDiversityIndices:
     '''
     This class will handle all operations to obtain the lexical diversity indices of a text according to Coh-Metrix
     '''
-    def __init__(self, nlp, language: str='es') -> None:
+    name = 'lexical_diversity_indices'
+
+    def __init__(self, nlp: Language) -> None:
         '''
-        The constructor will initialize this object that calculates the lexical diversity indices for a specific language of those that are available.
+        The constructor will initialize this object that calculates the lexical diversity indices for a specific language of those that are available. It needs the following pipes to be added before it: Content word identifier and alphanumeric word identifier.
 
         Parameters:
         nlp: The spacy model that corresponds to a language.
-        language(str): The language that the texts to process will have.
 
         Returns:
         None.
         '''
-        if not language in ACCEPTED_LANGUAGES:
-            raise ValueError(f'Language {language} is not supported yet')
+        required_pipes = ['content_word_identifier', 'alphanumeric_word_identifier']
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Lexical diversity indices pipe need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
         
-        self.language = language
         self._nlp = nlp
+        Doc.set_extension('lexical_diversity_indices', default=dict()) # Dictionary
 
-    def get_type_token_ratio_between_all_words(self, text: str, workers=-1) -> float:
+    def __call__(self, doc: Doc) -> Doc:
+        '''
+        This method will calculate the lexical diversity indices.
+
+        Parameters:
+        doc(Doc): A Spacy document.
+
+        Returns:
+        Doc: The processed doc.
+        '''
+        if len(doc.text) == 0:
+            raise ValueError('The text is empty.')
+
+        doc._.lexical_diversity_indices['LDTTRa'] = self.__get_type_token_ratio_between_all_words(doc)
+        doc._.lexical_diversity_indices['LDTTRcw'] = self.__get_type_token_ratio_of_content_words(doc)
+        return doc
+
+    def __get_type_token_ratio_between_all_words(self, doc: Doc) -> float:
         """
         This method returns the type token ratio between all words of a text.
 
         Parameters:
-        text(str): The text to be anaylized.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be anaylized.
+        
         Returns:
         float: The type token ratio between all words of a text.
         """
-        if len(text) == 0:
-            raise ValueError('The text is empty.')
-        elif workers == 0 or workers < -1:
-            raise ValueError('Workers must be -1 or any positive number greater than 0')
-        else:
-            paragraphs = split_text_into_paragraphs(text) # Obtain paragraphs
-            threads = multiprocessing.cpu_count() if workers == -1 else workers
-            tokens = []
-            disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe != 'tagger']
+        return 0 if doc._.alpha_words_count == 0 else doc._.alpha_words_different_count / doc._.alpha_words_count
 
-            tokens = [token.text.lower()
-                      for doc in self._nlp.pipe(paragraphs, batch_size=threads, disable=disable_pipeline, n_process=threads)
-                      for token in doc
-                      if is_word(token)]
-
-            return 0 if len(tokens) == 0 else len(set(tokens)) / len(tokens)
-
-    def get_type_token_ratio_of_content_words(self, text: str, workers=-1) -> float:
+    def __get_type_token_ratio_of_content_words(self, doc: Doc) -> float:
         """
         This method returns the type token ratio of content words of a text. Content words are nouns, verbs, adjectives and adverbs.
 
         Parameters:
-        text(str): The text to be anaylized.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be anaylized.
+        
         Returns:
         float: The type token ratio between the content words of a text.
         """
-        if len(text) == 0:
-            raise ValueError('The text is empty.')
-        elif workers == 0 or workers < -1:
-            raise ValueError('Workers must be -1 or any positive number greater than 0')
-        else:
-            paragraphs = split_text_into_paragraphs(text) # Obtain paragraphs
-            threads = multiprocessing.cpu_count() if workers == -1 else workers
-            tokens = []
-            disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe != 'tagger']
-
-            tokens = [token.text.lower()
-                      for doc in self._nlp.pipe(paragraphs, batch_size=threads, disable=disable_pipeline, n_process=threads)
-                      for token in doc
-                      if is_content_word(token)]
-
-            return 0 if len(tokens) == 0 else len(set(tokens)) / len(tokens)
+        return 0 if doc._.content_words_count == 0 else doc._.content_words_different_count / doc._.content_words_count

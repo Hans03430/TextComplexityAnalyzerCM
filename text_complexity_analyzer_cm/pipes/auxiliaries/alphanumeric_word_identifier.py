@@ -1,10 +1,9 @@
-from typing import Iterable, Iterator
+from typing import Iterator
 from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.tokens import Span
 
 from text_complexity_analyzer_cm.utils.utils import is_word
-from text_complexity_analyzer_cm.utils.utils import is_content_word
 
 
 def doc_alpha_words_getter(doc: Doc) -> Iterator:
@@ -15,32 +14,29 @@ def doc_alpha_words_getter(doc: Doc) -> Iterator:
     doc(Doc): Spacy document to be analyzed.
 
     Yields:
-    Iterator: Each alphabetic word
+    Iterator: Each alphabetic word as Tokens.
     '''
     for para in doc._.paragraphs:
         for sent in para._.non_empty_sentences:
             for word in sent._.alpha_words:
                 yield word
 
-def doc_content_words_getter(doc: Doc) -> Iterator:
+def doc_alpha_words_normalized_getter(doc: Doc) -> Iterator:
     '''
-    Function that gets the content words for the entire text.}
+    Function that gets the alphabetic words for the entire text, all in lowercase and as a string.
 
     Parameters:
     doc(Doc): Spacy document to be analyzed.
 
     Yields:
-    Iterator: Each content word
+    Iterator: Each alphabetic word as strings.
     '''
-    for para in doc._.paragraphs:
-        for sent in para._.non_empty_sentences:
-            for word in sent._.content_words:
-                yield word    
-
+    for word in doc._.alpha_words:
+        yield word.text.strip().lower()
 
 class AlphanumericWordIdentifier:
     '''
-    Pipe that identifies the alphanumeric words (and content words) in a doc. It goes after Paragraphizer.
+    Pipe that identifies the alphanumeric words in a doc. It goes after Paragraphizer.
     '''
     
     name = 'alphanumeric_word_identifier'
@@ -57,15 +53,22 @@ class AlphanumericWordIdentifier:
         Returns:
         None.
         '''
+        required_pipes = ['paragraphizer']
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Alphanumeric word identifier pipe need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
+        
         self._nlp = nlp
         Span.set_extension('alpha_words', default=[]) # List of words for sentence
         Span.set_extension('alpha_words_count', default=0) # Count of words for sentence
-        Span.set_extension('content_words', default=[])
-        Span.set_extension('content_words_count', default=0)
-        Doc.set_extension('content_words', getter=doc_content_words_getter)
-        Doc.set_extension('content_words_count', default=0)
         Doc.set_extension('alpha_words', getter=doc_alpha_words_getter)
+        Doc.set_extension('alpha_words_normalized', getter=doc_alpha_words_normalized_getter)
         Doc.set_extension('alpha_words_count', default=0)
+        Doc.set_extension('alpha_words_different', default=set())
+        Doc.set_extension('alpha_words_different_count', default=0)
 
     def __call__(self, doc: Doc) -> Doc:
         '''
@@ -81,10 +84,10 @@ class AlphanumericWordIdentifier:
         for para in doc._.paragraphs:
             for sent in para._.non_empty_sentences:
                 sent._.alpha_words = [token for token in sent if is_word(token)]
-                sent._.content_words = [token for token in sent if is_content_word(token)]
                 sent._.alpha_words_count = len(sent._.alpha_words)
-                sent._.content_words_count = len(sent._.content_words)
                 doc._.alpha_words_count += sent._.alpha_words_count
-                doc._.content_words_count += sent._.content_words_count
-        
+
+        doc._.alpha_words_different = set(doc._.alpha_words_normalized)
+        doc._.alpha_words_different_count = len(doc._.alpha_words_different)
+
         return doc

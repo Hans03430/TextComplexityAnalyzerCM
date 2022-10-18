@@ -57,7 +57,7 @@ def is_content_word(token: Token) -> bool:
     Returns:
     bool: True or false.
     '''
-    return token.is_alpha and token.pos_ in ['PROPN', 'NOUN', 'VERB', 'ADJ', 'ADV']
+    return token.is_alpha and token.pos_ in ['PROPN', 'NOUN', 'VERB', 'ADJ', 'ADV', 'AUX']
 
 
 def is_word(token: Token) -> bool:

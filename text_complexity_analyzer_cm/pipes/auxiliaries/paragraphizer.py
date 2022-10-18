@@ -72,7 +72,6 @@ class Paragraphizer:
             index_start_match = start_match.start() # Initial character of the paragraph separator
             span_paragraph_sep = doc.char_span(index_start_match, index_start_match + length_of_separator) # Get the span of the character separator
             span_paragraph = doc[token_i:span_paragraph_sep.start + 1] # Get the paragraph
-            print(span_paragraph)
             paragraphs.append(span_paragraph) # Add the paragraph span
             token_i = span_paragraph_sep.end
         # Add the last paragraph

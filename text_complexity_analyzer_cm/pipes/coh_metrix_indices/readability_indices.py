@@ -1,66 +1,59 @@
-import multiprocessing
-
-import spacy
-
-from text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices import DescriptiveIndices
+from spacy.language import Language
+from spacy.tokens import Doc
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 
 
 class ReadabilityIndices:
     '''
-    This class will handle all operations to find the readability indices of a text according to Coh-Metrix.
+    This pipe will handle all operations to find the readability indices of a text according to Coh-Metrix. It needs the descriptive indices pipe to be added before it.
     '''
+    name = 'readability_indices'
 
-    def __init__(self, nlp, language: str='es', descriptive_indices: DescriptiveIndices=None) -> None:
+    def __init__(self, nlp: Language) -> None:
         '''
         The constructor will initialize this object that calculates the readability indices for a specific language of those that are available.
 
         Parameters:
-        nlp: The spacy model that corresponds to a language.
-        language(str): The language that the texts to process will have.
-        descriptive_indices(DescriptiveIndices): The class that calculates the descriptive indices of a text in a certain language.
-
+        nlp(Language): The spacy model that corresponds to a language.
+        
         Returns:
         None.
         '''
-        if not language in ACCEPTED_LANGUAGES:
-            raise ValueError(f'Language {language} is not supported yet')
-        elif descriptive_indices is not None and descriptive_indices.language != language:
-            raise ValueError(f'The descriptive indices analyzer must be of the same language as the word information analyzer.')
+        required_pipes = ['descriptive_indices']
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Readability diversity indices pipe need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
         
-        self.language = language
         self._nlp = nlp
+        Doc.set_extension('readability_indices', default={})
 
-        if descriptive_indices is None: # Assign the descriptive indices to an attribute
-            self._di = DescriptiveIndices(language=language, nlp=nlp)
-        else:
-            self._di = descriptive_indices
+    def __call__(self, doc: Doc) -> Doc:
+        '''
+        This method will calculate the readability indices.
 
-    def calculate_fernandez_huertas_grade_level(self, text: str=None, mean_syllables_per_word: int=None, mean_words_per_sentence: int=None, workers: int=-1) -> float:
+        Parameters:
+        doc(Doc): A Spacy document.
+
+        Returns:
+        Doc: The processed doc.
+        '''
+        if len(doc.text) == 0:
+            raise ValueError('The text is empty.')
+
+        doc._.readability_indices['RDFHGL'] = self.__calculate_fernandez_huertas_grade_level(doc)
+        return doc
+
+    def __calculate_fernandez_huertas_grade_level(self, doc: Doc) -> float:
         '''
         This function obtains the Fernández-Huertas readability index for a text.
 
         Parameters:
-        text(str): The text to be analized.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-        mean_syllables_per_word(int): The mean of syllables per word in the text.
-        mean_words_per_sentence(int): The mean amount of words per sentences in the text.
-
+        doc(Doc): The text to be analized.
+        
         Returns:
         float: The Fernández-Huertas readability index for a text.
         '''
-        if self.language != 'es':
-            raise ValueError('This readability index is for spanish.')
-        elif text is not None and len(text) == 0:
-            raise ValueError('The word is empty.')
-        elif text is None and (mean_syllables_per_word is None or mean_words_per_sentence is None):
-            raise ValueError('If there\'s no text, then you must pass mean_syllables_per_word and mean_words_per_sentence at the same time.')
-        elif workers == 0 or workers < -1:
-            raise ValueError('Workers must be -1 or any positive number greater than 0')
-        else:
-            threads = multiprocessing.cpu_count() if workers == -1 else workers
-            mspw = mean_syllables_per_word if mean_syllables_per_word is not None else self._di.get_mean_of_syllables_per_word(text=text, workers=threads)
-            mwps = mean_words_per_sentence if mean_words_per_sentence is not None else self._di.get_mean_of_length_of_sentences(text=text, workers=threads)
-            
-            return 206.84 - 0.6 * mspw - 1.02 * mwps
+        return 206.84 - 0.6 * doc._.descriptive_indices['DESWLsy'] - 1.02 * doc._.descriptive_indices['DESSL']

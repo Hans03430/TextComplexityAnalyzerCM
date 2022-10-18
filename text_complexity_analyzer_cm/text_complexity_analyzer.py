@@ -9,7 +9,6 @@ from text_complexity_analyzer_cm.pipes.spanish.factory import *
 
 from typing import Dict
 from typing import List
-from typing import Tuple
 
 
 class TextComplexityAnalyzer:
@@ -54,6 +53,12 @@ class TextComplexityAnalyzer:
         self._nlp.add_pipe('alphanumeric_word_identifier')
         self._nlp.add_pipe('syllablelizer', config={'language': language})
         self._nlp.add_pipe('descriptive_indices')
+        self._nlp.add_pipe('content_word_identifier')
+        self._nlp.add_pipe('lexical_diversity_indices')
+        self._nlp.add_pipe('readability_indices')
+        self._nlp.add_pipe('noun_phrase_tagger')
+        self._nlp.add_pipe('words_before_main_verb_counter')
+        self._nlp.add_pipe('syntactic_complexity_indices')
         # Load default classifier if enabled
         if load_classifier:
             self.load_default_classifier()
@@ -268,7 +273,9 @@ class TextComplexityAnalyzer:
             # Process all texts using multiprocessing
             for doc in self._nlp.pipe(texts, batch_size=threads, n_process=threads):
                 print(doc._.descriptive_indices)
-
+                print(doc._.lexical_diversity_indices)
+                print(doc._.readability_indices)
+                print(doc._.syntactic_complexity_indices)
             end = time.time()
             print(f'Texts analyzed in {end - start} seconds.')
 

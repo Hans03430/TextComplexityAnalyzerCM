@@ -1,20 +1,9 @@
-from inspect import Attribute
-import multiprocessing
-import spacy
 import statistics
-import string
 
 from spacy.language import Language
 from spacy.tokens import Doc
-from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES, LANGUAGES_DICTIONARY_PYPHEN
 from text_complexity_analyzer_cm.utils.statistics_results import StatisticsResults
-from text_complexity_analyzer_cm.utils.utils import is_word
-from text_complexity_analyzer_cm.utils.utils import split_text_into_paragraphs
-from text_complexity_analyzer_cm.utils.utils import split_text_into_sentences
-from text_complexity_analyzer_cm.utils.utils import split_doc_into_sentences
 from typing import Callable
-from typing import List
-
 
 class DescriptiveIndices:
     '''
@@ -22,7 +11,7 @@ class DescriptiveIndices:
     '''
     def __init__(self, nlp: Language) -> None:
         '''
-        The constructor will initialize the extensions where to hold the descriptive indices of a doc.
+        The constructor will initialize the extensions where to hold the descriptive indices of a doc. It needs the following pipes to be added before it: 'alphanumeric_word_identifier', 'paragraphizer', 'syllablelizer'
 
         Parameters:
         nlp(Lanuage): The spacy model that corresponds to a language.
@@ -41,19 +30,20 @@ class DescriptiveIndices:
         
         self._nlp = nlp
         Doc.set_extension('descriptive_indices', default=dict()) # Dictionary
-        Doc.set_extension('sentences_with_content', default=[]) # Empty sentences of length 0 are not considered.
-
+        
     def __call__(self, doc: Doc) -> Doc:
         '''
         This method will calculate the descriptive indices.
 
         Parameters:
         doc(Doc): A Spacy document.
+
+        Returns:
+        Doc: The processed doc.
         '''
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
         
-        doc._.sentences_with_content = split_doc_into_sentences(doc)
         doc._.descriptive_indices['DESPC'] = doc._.paragraph_count
         doc._.descriptive_indices['DESSC'] = doc._.sentence_count
         doc._.descriptive_indices['DESWC'] = doc._.alpha_words_count
@@ -62,51 +52,6 @@ class DescriptiveIndices:
         self.__get_length_of_words(doc)
         self.__get_syllables_per_word(doc)
         return doc
-
-    def get_paragraph_count_from_text(self, doc: Doc) -> int:
-        """
-        This method counts how many paragarphs are there in a text
-
-        Parameters:
-        doc(Doc): The text to be analyzed
-
-        Returns:
-        int: The amount of paragraphs in a text
-        """
-        if len(doc.text) == 0:
-            raise ValueError('The text is empty.')
-        
-        return doc._.paragraph_count
-
-    def get_sentence_count_from_text(self, doc: Doc) -> int:
-        """
-        This method counts how many sentences a text has.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
-        
-        Returns:
-        int: The amount of sentences.
-        """
-        if len(doc.text) == 0:
-            raise ValueError('The text is empty.')
- 
-        return sum(1 for _ in doc.sents)
-
-    def get_word_count_from_text(self, doc: Doc) -> int:
-        """
-        This method counts how many words a text has.
-
-        Parameters:
-        doc(Doc): The text to be anaylized.
-        
-        Returns:
-        int: The amount of words.
-        """
-        if len(doc.text) == 0:
-            raise ValueError('The text is empty.')
-
-        return doc._.alpha_words_count
 
     def _get_mean_std_of_metric(self, doc: Doc, counter_function: Callable, statistic_type: str='all') -> StatisticsResults:
         """
@@ -156,7 +101,7 @@ class DescriptiveIndices:
         Parameters:
         doc(Doc): The text to be anaylized.
         """
-        count_length_of_sentences = lambda complete_text: [sentence._.alpha_words_count for sentence in complete_text._.sentences_with_content]
+        count_length_of_sentences = lambda complete_text: [sentence._.alpha_words_count for sentence in complete_text._.non_empty_sentences]
 
         metrics = self._get_mean_std_of_metric(doc, counter_function=count_length_of_sentences, statistic_type='all')
         doc._.descriptive_indices['DESSL'] = metrics.mean

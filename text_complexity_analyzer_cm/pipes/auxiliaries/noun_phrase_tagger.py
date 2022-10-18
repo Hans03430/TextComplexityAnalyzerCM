@@ -1,3 +1,4 @@
+from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.tokens import Span
 from spacy.util import filter_spans
@@ -6,29 +7,13 @@ from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from typing import List
 
 
-def noun_phrases_getter(doc: Doc) -> List[Span]:
-    '''
-    Function that returns the negative expressions as a list of Spacy Spans.
-
-    Parameters:
-    doc(Doc): A spacy doc containing the text.
-
-    Returns:
-    List[Span]: A list of spans that represent the negation expressions.
-    '''
-    return [doc[span['start']:span['end']]
-            for span in doc._.noun_phrases_span_indices]
-
-Doc.set_extension('noun_phrases_span_indices', force=True, default=[])
-Doc.set_extension('noun_phrases', force=True, getter=noun_phrases_getter)
-
 class NounPhraseTagger:
     '''
     This tagger has the task to find all noun phrases in a document. It needs to go after the 'Parser' pipeline component.
     '''
-    name = 'noun phrase tagger'
+    name = 'noun_phrase_tagger'
 
-    def __init__(self, language: str='es') -> None:
+    def __init__(self, nlp: Language) -> None:
         '''
         This constructor will initialize the object that tags noun phrases.
 
@@ -38,10 +23,10 @@ class NounPhraseTagger:
         Returns:
         None.
         '''
-        if not language in ACCEPTED_LANGUAGES:
-            raise ValueError(f'Language {language} is not supported yet')
+        self._nlp = nlp
 
-        self._language = language
+        Doc.set_extension('noun_phrases', force=True, default=[])
+        Span.set_extension('noun_phrase_modifiers_count', default=0) # Count of adjectives in a noun phrase
 
     def __call__(self, doc: Doc) -> Doc:
         '''
@@ -49,15 +34,19 @@ class NounPhraseTagger:
 
         Parameters:
         doc(Doc): A Spacy document.
-        '''
-        noun_phrases = set()
-        for nc in doc.noun_chunks: # We find the noun phrases in the entire document
-            for np in [nc, doc[nc.root.left_edge.i:nc.root.right_edge.i+1]]:
-                noun_phrases.add(np)
 
-        doc._.noun_phrases_span_indices = [{'start': span.start,
-                                            'end': span.end,
-                                            'label': span.label}
-                                           for span in filter_spans(noun_phrases)] # Save the noun phrases found
+        Returns:
+        Doc: The spacy document analyzed.
+        '''
+        noun_phrases = set(
+            np
+            for nc in doc.noun_chunks
+            for np in [nc, doc[nc.root.left_edge.i:nc.root.right_edge.i+1]]
+        )
+        # Find the amount of modifiers for each noun phrase
+        for np in noun_phrases:
+            np._.noun_phrase_modifiers_count = sum(1 for token in np if token.pos_ == 'ADJ')
+
+        doc._.noun_phrases = [span for span in filter_spans(noun_phrases)] # Save the noun phrases found
         
         return doc

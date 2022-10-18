@@ -31,14 +31,14 @@ class TextComplexityAnalyzer:
 
     The example uses the default classifier stored along the library.
     '''
-    def __init__(self, language:str = 'es', load_classifier=True, paragraph_separator: str='\n\n') -> None:
+    def __init__(self, language:str = 'es', load_classifier=True, paragraph_delimiter: str='\n\n') -> None:
         '''
         This constructor initializes the analizer for a specific language. It initializes all used pipes forthe analysis.
 
         Parameters:
         language(str): The language that the texts are in.
         load_classifier(bool): Flag to load the default prediction model or not.
-        paragraph_separator(str): Separator to consider for the paragraphs.
+        paragraph_delimiter(str): Separator to consider for the paragraphs.
         
         Returns:
         None.
@@ -50,8 +50,10 @@ class TextComplexityAnalyzer:
         self._nlp = spacy.load(ACCEPTED_LANGUAGES[language], disable=['ner'])
         self._nlp.max_length = 3000000
         self._nlp.add_pipe('sentencizer')
+        self._nlp.add_pipe('paragraphizer', config={'paragraph_delimiter': paragraph_delimiter})
         self._nlp.add_pipe('alphanumeric_word_identifier')
-        
+        self._nlp.add_pipe('syllablelizer', config={'language': language})
+        self._nlp.add_pipe('descriptive_indices')
         # Load default classifier if enabled
         if load_classifier:
             self.load_default_classifier()
@@ -265,7 +267,7 @@ class TextComplexityAnalyzer:
             threads = multiprocessing.cpu_count() if workers == -1 else workers  
             # Process all texts using multiprocessing
             for doc in self._nlp.pipe(texts, batch_size=threads, n_process=threads):
-                print(len(doc._.alpha_words))
+                print(doc._.descriptive_indices)
 
             end = time.time()
             print(f'Texts analyzed in {end - start} seconds.')

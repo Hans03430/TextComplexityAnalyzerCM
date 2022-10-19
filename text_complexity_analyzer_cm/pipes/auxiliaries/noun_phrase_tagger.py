@@ -23,9 +23,18 @@ class NounPhraseTagger:
         Returns:
         None.
         '''
+        required_pipes = ['parser']
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Noun phrase tagger pipe need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
+        
         self._nlp = nlp
 
         Doc.set_extension('noun_phrases', force=True, default=[])
+        Doc.set_extension('noun_phrases_count', default=0)
         Span.set_extension('noun_phrase_modifiers_count', default=0) # Count of adjectives in a noun phrase
 
     def __call__(self, doc: Doc) -> Doc:
@@ -48,5 +57,6 @@ class NounPhraseTagger:
             np._.noun_phrase_modifiers_count = sum(1 for token in np if token.pos_ == 'ADJ')
 
         doc._.noun_phrases = [span for span in filter_spans(noun_phrases)] # Save the noun phrases found
+        doc._.noun_phrases_count = len(doc._.noun_phrases)
         
         return doc

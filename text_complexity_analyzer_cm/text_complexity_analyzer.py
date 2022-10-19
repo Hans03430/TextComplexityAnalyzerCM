@@ -59,6 +59,10 @@ class TextComplexityAnalyzer:
         self._nlp.add_pipe('noun_phrase_tagger')
         self._nlp.add_pipe('words_before_main_verb_counter')
         self._nlp.add_pipe('syntactic_complexity_indices')
+        self._nlp.add_pipe('verb_phrase_tagger')
+        self._nlp.add_pipe('negative_expression_tagger')
+        self._nlp.add_pipe('syntactic_pattern_density_indices')
+        print(self._nlp.pipe_names)
         # Load default classifier if enabled
         if load_classifier:
             self.load_default_classifier()
@@ -276,6 +280,7 @@ class TextComplexityAnalyzer:
                 print(doc._.lexical_diversity_indices)
                 print(doc._.readability_indices)
                 print(doc._.syntactic_complexity_indices)
+                print(doc._.syntactic_pattern_density_indices)
             end = time.time()
             print(f'Texts analyzed in {end - start} seconds.')
 

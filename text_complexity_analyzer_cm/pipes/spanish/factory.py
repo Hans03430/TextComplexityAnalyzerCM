@@ -2,15 +2,19 @@ from spacy.lang.es import Spanish
 from spacy.language import Language
 
 from text_complexity_analyzer_cm.pipes.auxiliaries.alphanumeric_word_identifier import AlphanumericWordIdentifier
+from text_complexity_analyzer_cm.pipes.auxiliaries.content_word_identifier import ContentWordIdentifier
+from text_complexity_analyzer_cm.pipes.auxiliaries.negative_expression_tagger import NegativeExpressionTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.noun_phrase_tagger import NounPhraseTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.paragraphizer import Paragraphizer
 from text_complexity_analyzer_cm.pipes.auxiliaries.syllablelizer import Syllablelizer
-from text_complexity_analyzer_cm.pipes.auxiliaries.content_word_identifier import ContentWordIdentifier
+from text_complexity_analyzer_cm.pipes.auxiliaries.verb_phrase_tagger import VerbPhraseTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.words_before_main_verb_counter import WordsBeforeMainVerbCounter
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.descriptive_indices import DescriptiveIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.lexical_diversity_indices import LexicalDiversityIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.readability_indices import ReadabilityIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.syntactic_complexity_indices import SyntacticComplexityIndices
+from text_complexity_analyzer_cm.pipes.coh_metrix_indices.syntactic_pattern_density_indices import SyntacticPatternDensityIndices
+
 
 @Spanish.factory('alphanumeric_word_identifier')
 def create_es_alphanumeric_word_identifier(nlp: Language, name: str) -> AlphanumericWordIdentifier:
@@ -153,3 +157,63 @@ def create_es_words_before_main_verb_counter(nlp: Language, name: str) -> WordsB
     SyntacticComplexityIndices: The pipe that calculates the amount of words before the main verb of every sentence.
     '''
     return WordsBeforeMainVerbCounter(nlp)
+
+@Spanish.factory('verb_phrase_tagger')
+def create_es_verb_phrase_tagger(nlp: Language, name: str) -> VerbPhraseTagger:
+    '''
+    Function that creates verb phrase tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    VerbPhraseTagger: The pipe that tags the verb phrases.
+    '''
+    '''return VerbPhraseTagger(nlp, [[
+        {'POS': {'IN': ['AUX', 'VERB']}, 'OP': '+'},
+        {'POS': {'IN': ['ADP', 'SCONJ', 'CONJ', 'INTJ']}, 'OP': '*'},
+        {'POS': 'ADP', 'TAG': 'ADP__AdpType=Prep', 'OP': '*'},
+        {'POS': {'IN': ['AUX', 'VERB']}}
+    ]])'''
+    return VerbPhraseTagger(nlp, [[
+        {'POS': {'IN': ['AUX', 'VERB']}, 'OP': '+'},
+        {'POS': {'IN': ['ADP', 'SCONJ', 'CONJ', 'INTJ']}, 'OP': '*'},
+        {'POS': 'ADP', 'OP': '*'},
+        {'POS': {'IN': ['AUX', 'VERB']}}
+    ]])
+
+@Spanish.factory('negative_expression_tagger')
+def create_es_verb_phrase_tagger(nlp: Language, name: str) -> NegativeExpressionTagger:
+    '''
+    Function that creates negative expression tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    NegativeExpressionTagger: The pipe that tags the negative expressions.
+    '''
+    return NegativeExpressionTagger(nlp, [[
+        {
+            'POS': 'ADV',
+            'LOWER': {
+                'IN': ['no', 'nunca', 'jamás', 'tampoco']
+            }
+        }
+    ]])
+
+@Spanish.factory('syntactic_pattern_density_indices')
+def create_es_syntactic_pattern_density_indices(nlp: Language, name: str) -> SyntacticPatternDensityIndices:
+    '''
+    Function that creates syntactic pattern density indices pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    SyntacticPatternDensityIndices: The pipe that calculates the syntactic pattern density indices.
+    '''
+    return SyntacticPatternDensityIndices(nlp)

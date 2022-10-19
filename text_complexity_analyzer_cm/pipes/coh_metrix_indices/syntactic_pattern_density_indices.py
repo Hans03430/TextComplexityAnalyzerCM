@@ -1,10 +1,9 @@
 import multiprocessing
 
-import spacy
-
+from spacy.language import Language
+from spacy.tokens import Doc
 from typing import Callable
 from typing import List
-from text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices import DescriptiveIndices
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from text_complexity_analyzer_cm.utils.utils import split_text_into_paragraphs
 
@@ -14,33 +13,46 @@ class SyntacticPatternDensityIndices:
     This class will handle all operations to find the synthactic pattern density indices of a text according to Coh-Metrix.
     '''
 
-    def __init__(self, nlp, language: str='es', descriptive_indices: DescriptiveIndices=None) -> None:
+    name = 'syntactic_pattern_density_indices'
+
+    def __init__(self, nlp: Language) -> None:
         '''
         The constructor will initialize this object that calculates the synthactic pattern density indices for a specific language of those that are available.
 
         Parameters:
         nlp: The spacy model that corresponds to a language.
-        language(str): The language that the texts to process will have.
-        descriptive_indices(DescriptiveIndices): The class that calculates the descriptive indices of a text in a certain language.
-
+         
         Returns:
         None.
         '''
-        if not language in ACCEPTED_LANGUAGES:
-            raise ValueError(f'Language {language} is not supported yet')
-        elif descriptive_indices is not None and descriptive_indices.language != language:
-            raise ValueError(f'The descriptive indices analyzer must be of the same language as the word information analyzer.')
+        required_pipes = ['negative_expression_tagger', 'noun_phrase_tagger', 'alphanumeric_word_identifier']
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Syntatic pattern density indices pipe need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
         
-        self.language = language
         self._nlp = nlp
         self._incidence = 1000
+        Doc.set_extension('syntactic_pattern_density_indices', default={})
 
-        if descriptive_indices is None: # Assign the descriptive indices to an attribute
-            self._di = DescriptiveIndices(language=language, nlp=nlp)
-        else:
-            self._di = descriptive_indices
+    def __call__(self, doc: Doc) -> Doc:
+        '''
+        This method calculates the syntatic pattern density indices.
 
-    def _get_syntactic_pattern_density(self, text: str, disable_pipeline: List, sp_counter_function: Callable=None, word_count: int=None, workers: int=-1) -> int:
+        Parameters:
+        doc(Doc): A Spacy document.
+
+        Reeturns:
+        Doc: The spacy document that was analyzed
+        '''
+        doc._.syntactic_pattern_density_indices['DRNP'] = self.__get_noun_phrase_density(doc)
+        doc._.syntactic_pattern_density_indices['DRVP'] = self.__get_verb_phrase_density(doc)
+        doc._.syntactic_pattern_density_indices['DRNEG'] = self.__get_negation_expressions_density(doc)
+        return doc
+
+    def __get_syntactic_pattern_density(self, text: str, disable_pipeline: List, sp_counter_function: Callable=None, word_count: int=None, workers: int=-1) -> int:
         '''
         This function obtains the incidence of a syntactic pattern that exist on a text per {self._incidence} words.
 
@@ -68,59 +80,38 @@ class SyntacticPatternDensityIndices:
             
             return (density / wc) * self._incidence
 
-    def get_noun_phrase_density(self, text: str, word_count: int=None, workers: int=-1) -> int:
+    def __get_noun_phrase_density(self, doc: Doc) -> float:
         '''
         This function obtains the incidence of noun phrases that exist on a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analized.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analized.
+        
         Returns:
-        int: The incidence of noun phrases per {self._incidence} words.
+        float: The incidence of noun phrases per {self._incidence} words.
         '''
-        count_noun_phrases = lambda doc: len(doc._.noun_phrases)
-        disable_pipeline = [pipe 
-                            for pipe in self._nlp.pipe_names
-                            if pipe not in ['noun phrase tagger', 'tagger', 'parser', 'feature counter']]
+        return (doc._.noun_phrases_count / doc._.alpha_words_count) * self._incidence
 
-        return self._get_syntactic_pattern_density(text, disable_pipeline=disable_pipeline, sp_counter_function=count_noun_phrases, workers=workers)
-
-    def get_verb_phrase_density(self, text: str, word_count: int=None, workers: int=-1) -> int:
+    def __get_verb_phrase_density(self, doc: Doc) -> float:
         '''
         This function obtains the incidence of verb phrases that exist on a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analized.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analized.
+        
         Returns:
-        int: The incidence of verb phrases per {self._incidence} words.
+        float: The incidence of verb phrases per {self._incidence} words.
         '''
-        count_verb_phrases = lambda doc: len(doc._.verb_phrases)
-        disable_pipeline = [pipe 
-                            for pipe in self._nlp.pipe_names
-                            if pipe not in ['verb phrase tagger', 'tagger', 'feature counter']]
+        return (doc._.verb_phrases_count / doc._.alpha_words_count) * self._incidence
 
-        return self._get_syntactic_pattern_density(text, disable_pipeline=disable_pipeline, sp_counter_function=count_verb_phrases, workers=workers)
-            
-    def get_negation_expressions_density(self, text: str, word_count: int=None, workers: int=-1) -> int:
+    def __get_negation_expressions_density(self, doc: Doc) -> float:
         '''
         This function obtains the incidence of negation expressions that exist on a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analized.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analized.
+        
         Returns:
-        int: The incidence of negation expressions per {self._incidence} words.
+        float: The incidence of negation expressions per {self._incidence} words.
         '''
-        count_negation_expressions = lambda doc: len(doc._.negation_expressions)
-        disable_pipeline = [pipe 
-                            for pipe in self._nlp.pipe_names
-                            if pipe not in ['negative expression tagger', 'tagger', 'feature counter']]
-
-        return self._get_syntactic_pattern_density(text, disable_pipeline=disable_pipeline, sp_counter_function=count_negation_expressions, workers=workers)
+        return (doc._.negative_expressions_count / doc._.alpha_words_count) * self._incidence

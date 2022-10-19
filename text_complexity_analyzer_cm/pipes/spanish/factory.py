@@ -1,20 +1,28 @@
 from spacy.lang.es import Spanish
 from spacy.language import Language
 
+from text_complexity_analyzer_cm.pipes.auxiliaries.additive_connectives_tagger import AdditiveConnectivesTagger
+from text_complexity_analyzer_cm.pipes.auxiliaries.adversative_connectives_tagger import AdversativeConnectivesTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.alphanumeric_word_identifier import AlphanumericWordIdentifier
+from text_complexity_analyzer_cm.pipes.auxiliaries.causal_connectives_tagger import CausalConnectivesTagger
+from text_complexity_analyzer_cm.pipes.auxiliaries.cohesion_words_tokenizer import CohesionWordsTokenizer
 from text_complexity_analyzer_cm.pipes.auxiliaries.content_word_identifier import ContentWordIdentifier
+from text_complexity_analyzer_cm.pipes.auxiliaries.logical_connectives_tagger import LogicalConnectivesTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.negative_expression_tagger import NegativeExpressionTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.noun_phrase_tagger import NounPhraseTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.paragraphizer import Paragraphizer
 from text_complexity_analyzer_cm.pipes.auxiliaries.syllablelizer import Syllablelizer
+from text_complexity_analyzer_cm.pipes.auxiliaries.temporal_connectives_tagger import TemporalConnectivesTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.verb_phrase_tagger import VerbPhraseTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.words_before_main_verb_counter import WordsBeforeMainVerbCounter
+from text_complexity_analyzer_cm.pipes.coh_metrix_indices.connective_indices import ConnectiveIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.descriptive_indices import DescriptiveIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.lexical_diversity_indices import LexicalDiversityIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.readability_indices import ReadabilityIndices
+from text_complexity_analyzer_cm.pipes.coh_metrix_indices.referential_cohesion_indices import ReferentialCohesionIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.syntactic_complexity_indices import SyntacticComplexityIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.syntactic_pattern_density_indices import SyntacticPatternDensityIndices
-
+from text_complexity_analyzer_cm.pipes.spanish.overlap_analyzers import *
 
 @Spanish.factory('alphanumeric_word_identifier')
 def create_es_alphanumeric_word_identifier(nlp: Language, name: str) -> AlphanumericWordIdentifier:
@@ -217,3 +225,115 @@ def create_es_syntactic_pattern_density_indices(nlp: Language, name: str) -> Syn
     SyntacticPatternDensityIndices: The pipe that calculates the syntactic pattern density indices.
     '''
     return SyntacticPatternDensityIndices(nlp)
+
+@Spanish.factory('causal_connectives_tagger')
+def create_es_causal_connectives_tagger(nlp: Language, name: str) -> CausalConnectivesTagger:
+    '''
+    Function that creates causal connective tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    CausalConnectivesTagger: The pipe that tags the causal connectives.
+    '''
+    return CausalConnectivesTagger(nlp, ['por', 'porque', 'a causa de', 'puesto que', 'con motivo de', 'pues', 'ya que', 'conque', 'luego', 'pues', 'por consiguiente', 'así que', 'en consecuencia', 'de manera que', 'tan', 'tanto que', 'por lo tanto', 'de modo que'])
+
+@Spanish.factory('logical_connectives_tagger')
+def create_es_logical_connectives_tagger(nlp: Language, name: str) -> LogicalConnectivesTagger:
+    '''
+    Function that creates logical connective tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    LogicalConnectivesTagger: The pipe that tags the logical connectives.
+    '''
+    return LogicalConnectivesTagger(nlp, ['y', 'o'])
+
+@Spanish.factory('adversative_connectives_tagger')
+def create_es_adversative_connectives_tagger(nlp: Language, name: str) -> AdversativeConnectivesTagger:
+    '''
+    Function that creates adversative connective tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    LogicalConnectivesTagger: The pipe that tags the adversative connectives.
+    '''
+    return AdversativeConnectivesTagger(nlp, ['pero', 'sino', 'no obstante', 'sino que', 'sin embargo', 'pero sí', 'aunque', 'menos', 'solo', 'excepto', 'salvo', 'más que', 'en cambio', 'ahora bien', 'más bien'])
+
+@Spanish.factory('temporal_connectives_tagger')
+def create_es_temporal_connectives_tagger(nlp: Language, name: str) -> TemporalConnectivesTagger:
+    '''
+    Function that creates temporal connective tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    TemporalConnectivesTagger: The pipe that tags the temporal connectives.
+    '''
+    return TemporalConnectivesTagger(nlp, ['actualmente', 'ahora', 'después', 'más tarde', 'más adelante', 'a continuación', 'antes', 'mientras', 'érase una vez', 'hace mucho tiempo', 'tiempo antes', 'finalmente', 'inicialmente', 'ya', 'simultáneamente', 'previamente', 'anteriormente', 'posteriormente', 'al mismo tiempo', 'durante'])
+
+@Spanish.factory('additive_connectives_tagger')
+def create_es_additive_connectives_tagger(nlp: Language, name: str) -> AdditiveConnectivesTagger:
+    '''
+    Function that creates additive connective tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    AdditiveConnectivesTagger: The pipe that tags the additive connectives.
+    '''
+    return AdditiveConnectivesTagger(nlp, ['asimismo', 'igualmente' 'de igual modo', 'de igual manera', 'de igual forma', 'del mismo modo', 'de la misma manera', 'de la misma forma', 'en primer lugar', 'en segundo lugar', 'en tercer lugar', 'en último lugar', 'por su parte', 'por otro lado', 'además', 'encima', 'es más', 'por añadidura', 'incluso', 'inclusive', 'para colmo'])
+
+@Spanish.factory('connective_indices')
+def create_es_syntactic_pattern_density_indices(nlp: Language, name: str) -> ConnectiveIndices:
+    '''
+    Function that creates connective indices pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    ConnectiveIndices: The pipe that calculates the connective indices.
+    '''
+    return ConnectiveIndices(nlp)
+
+@Spanish.factory('cohesion_words_tokenizer')
+def create_es_cohesion_words_tokenizer(nlp: Language, name: str) -> CohesionWordsTokenizer:
+    '''
+    Function that creates a cohesion word tokenizer pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    CohesionWordsTokenizer: The pipe that tokenizes the cohesion words for each sentence.
+    '''
+    return CohesionWordsTokenizer(nlp)
+
+@Spanish.factory('referential_cohesion_indices')
+def create_es_referential_cohesion_indices(nlp: Language, name: str) -> ReferentialCohesionIndices:
+    '''
+    Function that creates referential cohesion pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    ReferentialCohesionIndices: The pipe that calculates the referential cohesion indices.
+    '''
+    return ReferentialCohesionIndices(nlp, analyze_noun_overlap, analyze_argument_overlap, analyze_stem_overlap, analyze_content_word_overlap, analyze_anaphore_overlap)

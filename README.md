@@ -59,7 +59,7 @@ De las 45 métricas a implementar originalmente, se implementarán 48. Aquí est
 
 ## Índices de cohesión referencial (Referential cohesion)
 
-    * CRFNO: Promedio de oraciones contiguas que poseen solapamiento entre sustantivos. Estos deben coincidir completamente.
+    * CRFNO1: Promedio de oraciones contiguas que poseen solapamiento entre sustantivos. Estos deben coincidir completamente.
     * CRFNOa: Promedio del total de todas las oraciones que poseen solapamiento entre sustantivos. Estos deben coincidir completamente.
     * CRFAO1: Promedio de oraciones contiguas que poseen solapamiento entre pronombres personales o lemmas de sustantivos.
     * CRFAOa: Promedio del total de todas las oraciones que poseen solapamiento entre pronombres personales o lemmas de sustantivos.

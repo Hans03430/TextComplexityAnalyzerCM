@@ -35,7 +35,10 @@ class NegativeExpressionTagger:
         self._nlp = nlp
         self._pattern = pattern
         self._matcher = Matcher(nlp.vocab)
-        self._matcher.add('negative expression', self._pattern) # Add the negative expression pattern
+        # Add the patterns for the negative expressions
+        for pattern in self._pattern:
+            self._matcher.add('negative expression', [pattern])
+
         Doc.set_extension('negative_expressions', default=[])
         Doc.set_extension('negative_expressions_count', default=0)
 

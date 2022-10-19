@@ -43,7 +43,7 @@ class SyntacticComplexityIndices:
         Doc: The spacy document analyzed.
         '''
         if len(doc.text) == 0:
-            raise ValueError('The word is empty.')
+            raise ValueError('The text is empty.')
 
         doc._.syntactic_complexity_indices['SYNNP'] = self.__get_mean_number_of_modifiers_per_noun_phrase(doc)
         doc._.syntactic_complexity_indices['SYNLE'] = self.__get_mean_number_of_words_before_main_verb(doc)

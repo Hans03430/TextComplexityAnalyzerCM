@@ -39,7 +39,9 @@ class VerbPhraseTagger:
 
         Doc.set_extension('verb_phrases', default=0)
         Doc.set_extension('verb_phrases_count', default=[])
-        self._matcher.add('verb phrase', self._pattern) # Add the verb phrase pattern
+        # Add the patterns to find the verb phrases
+        for pattern in self._pattern:
+            self._matcher.add('verb phrase', [pattern])
 
     def __call__(self, doc: Doc) -> Doc:
         '''

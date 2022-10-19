@@ -19,6 +19,20 @@ def doc_content_words_normalized_getter(doc: Doc) -> Iterator:
     for word in doc._.content_words:
         yield word.text.strip().lower()
 
+def doc_content_words_getter(doc: Doc) -> Iterator:
+    '''
+    Function that gets the content words for the entire text.}
+
+    Parameters:
+    doc(Doc): Spacy document to be analyzed.
+
+    Yields:
+    Iterator: Each content word as Tokens.
+    '''
+    for para in doc._.paragraphs:
+        for sent in para._.non_empty_sentences:
+            for word in sent._.content_words:
+                yield word
 
 class ContentWordIdentifier:
     '''
@@ -39,7 +53,7 @@ class ContentWordIdentifier:
         Returns:
         None.
         '''
-        required_pipes = ['paragraphizer']
+        required_pipes = ['paragraphizer', 'morphologizer']
         if not all((
             pipe in nlp.pipe_names
             for pipe in required_pipes
@@ -48,7 +62,9 @@ class ContentWordIdentifier:
             raise AttributeError(message)
 
         self._nlp = nlp
-        Doc.set_extension('content_words', default=[])
+        Span.set_extension('content_words', default=[])
+        Span.set_extension('content_words_count', default=0)
+        Doc.set_extension('content_words', getter=doc_content_words_getter)
         Doc.set_extension('content_words_count', default=0)
         Doc.set_extension('content_words_normalized', getter=doc_content_words_normalized_getter)
         Doc.set_extension('content_words_different', default=set())
@@ -64,9 +80,13 @@ class ContentWordIdentifier:
         Returns:
         Doc: The analyzed spacy document.
         '''
-        # Find the content words for the entire paragraph
-        doc._.content_words = [token for token in doc if is_content_word(token)]
-        doc._.content_words_count += len(doc._.content_words)
+        # Find the content words for the all paragraphs
+        for para in doc._.paragraphs:
+            for sent in para._.non_empty_sentences:
+                sent._.content_words = [token for token in sent if is_content_word(token)]
+                sent._.content_words_count = len(sent._.content_words)
+                doc._.content_words_count += sent._.content_words_count
+
         doc._.content_words_different = set(doc._.content_words_normalized)
         doc._.content_words_different_count = len(doc._.content_words_different)
     

@@ -46,7 +46,7 @@ class TextComplexityAnalyzer:
             raise ValueError(f'Language {language} is not supported yet')
         
         self.language = language
-        self._nlp = spacy.load(ACCEPTED_LANGUAGES[language], disable=['ner'])
+        self._nlp = spacy.load(ACCEPTED_LANGUAGES[language], exclude=['ner'])
         self._nlp.max_length = 3000000
         self._nlp.add_pipe('sentencizer')
         self._nlp.add_pipe('paragraphizer', config={'paragraph_delimiter': paragraph_delimiter})
@@ -62,7 +62,14 @@ class TextComplexityAnalyzer:
         self._nlp.add_pipe('verb_phrase_tagger')
         self._nlp.add_pipe('negative_expression_tagger')
         self._nlp.add_pipe('syntactic_pattern_density_indices')
-        print(self._nlp.pipe_names)
+        self._nlp.add_pipe('causal_connectives_tagger')
+        self._nlp.add_pipe('logical_connectives_tagger')
+        self._nlp.add_pipe('adversative_connectives_tagger')
+        self._nlp.add_pipe('temporal_connectives_tagger')
+        self._nlp.add_pipe('additive_connectives_tagger')
+        self._nlp.add_pipe('connective_indices')
+        self._nlp.add_pipe('cohesion_words_tokenizer')
+        self._nlp.add_pipe('referential_cohesion_indices')
         # Load default classifier if enabled
         if load_classifier:
             self.load_default_classifier()
@@ -281,6 +288,9 @@ class TextComplexityAnalyzer:
                 print(doc._.readability_indices)
                 print(doc._.syntactic_complexity_indices)
                 print(doc._.syntactic_pattern_density_indices)
+                print(doc._.connective_indices)
+                print(doc._.referential_cohesion_indices)
+                
             end = time.time()
             print(f'Texts analyzed in {end - start} seconds.')
 

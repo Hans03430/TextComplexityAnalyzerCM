@@ -1,9 +1,6 @@
 from spacy.language import Language
 from spacy.tokens import Doc
-from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
-from text_complexity_analyzer_cm.utils.utils import is_content_word
-from text_complexity_analyzer_cm.utils.utils import is_word
-from text_complexity_analyzer_cm.utils.utils import split_text_into_paragraphs
+
 
 class LexicalDiversityIndices:
     '''

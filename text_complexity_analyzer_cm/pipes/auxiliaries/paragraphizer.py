@@ -25,7 +25,7 @@ def doc_non_empty_sentences_getter(doc: Doc) -> Iterator:
 
 class Paragraphizer:
     '''
-    Pipe that splits the text into paragraphs. It must be the first custom pipe.
+    Pipe that splits the text into paragraphs. It must be the first custom pipe after sentencizer.
     '''
 
     name = 'paragraphizer'
@@ -43,6 +43,14 @@ class Paragraphizer:
         Returns:
         None.
         '''
+        required_pipes = ['sentencizer']
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Paragraphizer need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
+
         self._nlp = nlp
         self._paragraph_delimiter = paragraph_delimiter
 

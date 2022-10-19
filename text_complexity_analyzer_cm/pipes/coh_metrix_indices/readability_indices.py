@@ -1,6 +1,5 @@
 from spacy.language import Language
 from spacy.tokens import Doc
-from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 
 
 class ReadabilityIndices:

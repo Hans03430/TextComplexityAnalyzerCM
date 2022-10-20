@@ -3,7 +3,9 @@ import statistics
 from spacy.language import Language
 from spacy.tokens import Doc
 from text_complexity_analyzer_cm.utils.statistics_results import StatisticsResults
+from time import time
 from typing import Callable
+
 
 class DescriptiveIndices:
     '''
@@ -44,6 +46,8 @@ class DescriptiveIndices:
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
         
+        print('Analyzing descriptive indices')
+        start = time()
         doc._.descriptive_indices['DESPC'] = doc._.paragraph_count
         doc._.descriptive_indices['DESSC'] = doc._.sentence_count
         doc._.descriptive_indices['DESWC'] = doc._.alpha_words_count
@@ -51,6 +55,8 @@ class DescriptiveIndices:
         self.__get_length_of_sentences(doc)
         self.__get_syllables_per_word(doc)
         self.__get_length_of_words(doc)
+        end = time()
+        print(f'Descriptive indices analyzed in {end - start} seconds.')
         return doc
 
     def _get_mean_std_of_metric(self, doc: Doc, counter_function: Callable, statistic_type: str='all') -> StatisticsResults:

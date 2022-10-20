@@ -38,7 +38,8 @@ class AdversativeConnectivesTagger:
         Doc.set_extension('adversative_connectives_count', default=0)
         # Add the connectives to the matcher
         for con in self._connectives:
-            con_doc = self._nlp(con, disable=self._nlp.pipe_names)
+            #con_doc = self._nlp.tokenizer(con, disable=self._nlp.pipe_names)
+            con_doc = self._nlp.tokenizer(con)
             self._matcher.add(con, [con_doc])
 
     def __call__(self, doc: Doc) -> Doc:

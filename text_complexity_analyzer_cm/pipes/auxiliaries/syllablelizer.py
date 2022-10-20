@@ -5,7 +5,6 @@ from spacy.tokens import Doc
 from spacy.tokens import Token
 
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES, LANGUAGES_DICTIONARY_PYPHEN
-from text_complexity_analyzer_cm.utils.utils import is_word
 
 
 class Syllablelizer:
@@ -28,6 +27,14 @@ class Syllablelizer:
         Returns:
         None.
         '''
+        required_pipes = ['alphanumeric_word_identifier']
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Syllablelizer pipe need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
+        
         if not language in ACCEPTED_LANGUAGES:
             raise ValueError(f'Language {language} is not supported yet')
 

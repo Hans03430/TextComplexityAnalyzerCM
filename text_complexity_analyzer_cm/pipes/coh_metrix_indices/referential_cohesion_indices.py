@@ -1,5 +1,3 @@
-import multiprocessing
-import spacy
 import statistics
 
 from itertools import combinations
@@ -9,12 +7,9 @@ from spacy.tokens import Doc
 from spacy.tokens import Span
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from text_complexity_analyzer_cm.utils.statistics_results import StatisticsResults
-from text_complexity_analyzer_cm.utils.utils import is_word
-from text_complexity_analyzer_cm.utils.utils import is_content_word
-from text_complexity_analyzer_cm.utils.utils import split_text_into_paragraphs
-from typing import Callable, Iterator
+from time import time
+from typing import Callable, Dict, Iterator, List
 from typing import Tuple
-from typing import List
 
 
 def doc_adjacent_sentence_pairs_getter(doc: Doc) -> Tuple[Span, Span]:
@@ -106,37 +101,30 @@ class ReferentialCohesionIndices:
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
 
-        doc._.referential_cohesion_indices['CRFNO1'] = self.__get_noun_overlap_adjacent_sentences(doc)
-        doc._.referential_cohesion_indices['CRFNOa'] = self.__get_noun_overlap_all_sentences(doc)
-        doc._.referential_cohesion_indices['CRFAO1'] = self.__get_argument_overlap_adjacent_sentences(doc)
-        doc._.referential_cohesion_indices['CRFAOa'] = self.__get_argument_overlap_all_sentences(doc)
-        doc._.referential_cohesion_indices['CRFSO1'] = self.__get_stem_overlap_adjacent_sentences(doc)
-        doc._.referential_cohesion_indices['CRFSOa'] = self.__get_stem_overlap_all_sentences(doc)
-        self.__get_content_word_overlap_adjacent_sentences(doc)
-        self.__get_content_word_overlap_all_sentences(doc)
-        doc._.referential_cohesion_indices['CRFANP1'] = self.__get_anaphore_overlap_adjacent_sentences(doc)
-        doc._.referential_cohesion_indices['CRFANPa'] = self.__get_anaphore_overlap_all_sentences(doc)
-        
+        print('Analyzing referential cohesion indices.')
+        start = time()
+        self.__get_overlap_adjacent_sentences(doc)
+        self.__get_overlap_all_sentences(doc)
+        end = time()
+        print(f'Referential cohesion indices analyzed in {end - start} seconds.')
+
         return doc
 
-    def __calculate_overlap_for_sentences(self, doc: Doc, sentence_analyzer: Callable, sentence_pairs: Iterator,statistic_type: str='mean') -> StatisticsResults:
+    def __calculate_overlap_for_sentences(self, values: List = [] ,statistic_type: str='mean') -> StatisticsResults:
         '''
         This method calculates the overlap for adjacent sentences in a text. MULTIPROCESSING STILL NOT IMPLEMENTED.
 
         Parameters:
-        doc(Doc): The text to be analyzed.
-        sentence_analyzer(Callable): The function that analyzes sentences to check cohesion.
-        sentence_pairs(Iterator): The iterator that returns the pair of sentences
+        values(List): The values to calculate their statistics
         statistic_type(str): Whether to calculate the mean and/or the standard deviation. It accepts 'mean', 'std' or 'all'.
         
         Returns:
         StatisticsResults: The standard deviation and mean of the overlap.
         '''
-        # TODO MULTIPROCESSING. WORKERS IS JUST A PLACEHOLDER
         if statistic_type not in ['mean', 'std', 'all']:
             raise ValueError('\'statistic_type\' can only take \'mean\', \'std\' or \'all\'.')
         else:
-            referential_cohesion = [sentence_analyzer(prev, cur) for prev, cur in sentence_pairs]
+            referential_cohesion = values
             stat_results = StatisticsResults() # Create empty container
 
             if len(referential_cohesion) == 0:
@@ -149,127 +137,65 @@ class ReferentialCohesionIndices:
                     stat_results.std = statistics.pstdev(referential_cohesion)
                 
                 return stat_results
-    
-    def __get_noun_overlap_adjacent_sentences(self, doc: Doc) -> float:
-        '''
-        This method calculates the noun overlap for adjacent sentences in a text.
 
-        Parameters:
-        doc(Doc): The text to be analyzed.
+    def __get_overlap_of_sentences(self, doc: Doc, sentences: Iterator) -> Dict:
+        '''
+        Method that calculates all overlaps for the sentences passed as an iterator.
+
+        Paramters:
+        doc(Doc): The document to analyze.
+        sentences(Iterator): Pair of sentences to analyze
 
         Returns:
-        float: The mean noun overlap.
+        Dict: Dictionary with the overlap analysis for each type of word. Content word returns a StatisticsResult object
         '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._noun_overlap_func, sentence_pairs=doc._.adjacent_sentence_pairs, statistic_type='mean').mean
+        noun_overlap = []
+        argument_overlap = []
+        stem_overlap = []
+        content_word_overlap = []
+        anaphore_overlap = []
+        # Iterate over all adjacent sentence pairs to analyze them
+        for prev, cur in sentences:
+            noun_overlap.append(self._noun_overlap_func(prev, cur))
+            argument_overlap.append(self._argument_overlap_func(prev, cur))
+            stem_overlap.append(self._stem_overlap_func(prev, cur))
+            content_word_overlap.append(self._content_word_overlap_func(prev, cur))
+            anaphore_overlap.append(self._anaphore_overlap_func(prev, cur))
 
-    def __get_noun_overlap_all_sentences(self, doc: Doc) -> float:
+        return {
+            'noun_overlap': self.__calculate_overlap_for_sentences(noun_overlap, 'mean').mean,
+            'argument_overlap': self.__calculate_overlap_for_sentences(argument_overlap, 'mean').mean,
+            'stem_overlap': self.__calculate_overlap_for_sentences(stem_overlap, 'mean').mean,
+            'content_word_overlap': self.__calculate_overlap_for_sentences(content_word_overlap, 'all'),
+            'anaphore_overlap': self.__calculate_overlap_for_sentences(anaphore_overlap, 'mean').mean
+        }
+
+    def __get_overlap_adjacent_sentences(self, doc: Doc) -> None:
         '''
-        This method calculates the noun overlap for all sentences in a text.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
-
-        Returns:
-        float: The mean noun overlap.
-        '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._noun_overlap_func, sentence_pairs=doc._.all_sentence_pairs, statistic_type='mean').mean
-
-    def __get_argument_overlap_adjacent_sentences(self, doc: Doc) -> float:
-        '''
-        This method calculates the argument overlap for adjacent sentences in a text.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
+        Method that calculates the overlap for nouns, arguments, stems, content words and anaphores of adjacent sentences.
         
-        Returns:
-        float: The mean argument overlap.
-        '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._argument_overlap_func, sentence_pairs=doc._.adjacent_sentence_pairs, statistic_type='mean').mean
-
-    def __get_argument_overlap_all_sentences(self, doc: Doc) -> float:
-        '''
-        This method calculates the argument overlap for all sentences in a text.
-
         Parameters:
-        doc(Doc): The text to be analyzed.
-
-        Returns:
-        float: The mean argument overlap.
+        doc(Doc): The document to analyze.
         '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._argument_overlap_func, sentence_pairs=doc._.all_sentence_pairs, statistic_type='mean').mean
+        overlap = self.__get_overlap_of_sentences(doc, doc._.adjacent_sentence_pairs)
+        doc._.referential_cohesion_indices['CRFNO1'] = overlap['noun_overlap']
+        doc._.referential_cohesion_indices['CRFAO1'] = overlap['argument_overlap']
+        doc._.referential_cohesion_indices['CRFSO1'] = overlap['stem_overlap']
+        doc._.referential_cohesion_indices['CRFCWO1'] = overlap['content_word_overlap'].mean
+        doc._.referential_cohesion_indices['CRFCWO1d'] = overlap['content_word_overlap'].std  
+        doc._.referential_cohesion_indices['CRFANP1'] = overlap['anaphore_overlap']
 
-    def __get_stem_overlap_adjacent_sentences(self, doc: Doc) -> float:
+    def __get_overlap_all_sentences(self, doc: Doc) -> None:
         '''
-        This method calculates the argument overlap for stem sentences in a text.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
+        Method that calculates the overlap for nouns, arguments, stems, content words and anaphores of all sentences.
         
-        Returns:
-        float: The mean stem overlap.
-        '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._stem_overlap_func, sentence_pairs=doc._.adjacent_sentence_pairs, statistic_type='mean').mean
-
-    def __get_stem_overlap_all_sentences(self, doc: Doc) -> float:
-        '''
-        This method calculates the stem overlap for all sentences in a text.
-
         Parameters:
-        doc(Doc): The text to be analyzed.
-
-        Returns:
-        float: The mean stem overlap.
+        doc(Doc): The document to analyze.
         '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._stem_overlap_func, sentence_pairs=doc._.all_sentence_pairs, statistic_type='mean').mean
-
-    def __get_content_word_overlap_adjacent_sentences(self, doc: Doc) -> None:
-        '''
-        This method calculates the mean and standard deviation of the content word overlap for adjacent sentences in a text.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
-
-        Returns:
-        None:
-        '''
-        results = self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._content_word_overlap_func, sentence_pairs=doc._.adjacent_sentence_pairs, statistic_type='all')
-        doc._.referential_cohesion_indices['CRFCWO1'] = results.mean
-        doc._.referential_cohesion_indices['CRFCWO1d'] = results.std        
-
-    def __get_content_word_overlap_all_sentences(self, doc: Doc) -> StatisticsResults:
-        '''
-        This method calculates the mean and standard deviation of the content word overlap for all sentences in a text.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
-
-        Returns:
-        None:
-        '''
-        results = self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._content_word_overlap_func, sentence_pairs=doc._.all_sentence_pairs, statistic_type='all')
-        doc._.referential_cohesion_indices['CRFCWOa'] = results.mean
-        doc._.referential_cohesion_indices['CRFCWOad'] = results.std 
-
-    def __get_anaphore_overlap_adjacent_sentences(self, doc: Doc) -> float:
-        '''
-        This method calculates the argument overlap for anaphore sentences in a text.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
-        
-        Returns:
-        float: The mean anaphore overlap.
-        '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._anaphore_overlap_func, sentence_pairs=doc._.adjacent_sentence_pairs, statistic_type='mean').mean
-
-    def __get_anaphore_overlap_all_sentences(self, doc: Doc) -> float:
-        '''
-        This method calculates the anaphore overlap for all sentences in a text.
-
-        Parameters:
-        doc(Doc): The text to be analyzed.
-
-        Returns:
-        float: The mean anaphore overlap.
-        '''
-        return self.__calculate_overlap_for_sentences(doc=Doc, sentence_analyzer=self._anaphore_overlap_func, sentence_pairs=doc._.all_sentence_pairs, statistic_type='mean').mean
+        overlap = self.__get_overlap_of_sentences(doc, doc._.all_sentence_pairs)
+        doc._.referential_cohesion_indices['CRFNOa'] = overlap['noun_overlap']
+        doc._.referential_cohesion_indices['CRFAOa'] = overlap['argument_overlap']
+        doc._.referential_cohesion_indices['CRFSOa'] = overlap['stem_overlap']
+        doc._.referential_cohesion_indices['CRFCWOa'] = overlap['content_word_overlap'].mean
+        doc._.referential_cohesion_indices['CRFCWOad'] = overlap['content_word_overlap'].std  
+        doc._.referential_cohesion_indices['CRFANPa'] = overlap['anaphore_overlap']

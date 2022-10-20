@@ -1,11 +1,6 @@
-import multiprocessing
-
 from spacy.language import Language
 from spacy.tokens import Doc
-from typing import Callable
-from typing import List
-from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
-from text_complexity_analyzer_cm.utils.utils import split_text_into_paragraphs
+from time import time
 
 class ConnectiveIndices:
     '''
@@ -49,13 +44,17 @@ class ConnectiveIndices:
         '''
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
-
+        
+        print('Analyzing connective indices.')
+        start = time()
         doc._.connective_indices['CNCAll'] = self.__get_all_connectives_incidence(doc)
         doc._.connective_indices['CNCCaus'] = self.__get_causal_connectives_incidence(doc)
         doc._.connective_indices['CNCLogic'] = self.__get_logical_connectives_incidence(doc)
         doc._.connective_indices['CNCADC'] = self.__get_adversative_connectives_incidence(doc)
         doc._.connective_indices['CNCTemp'] = self.__get_temporal_connectives_incidence(doc)
         doc._.connective_indices['CNCAdd'] = self.__get_additive_connectives_incidence(doc)
+        end = time()
+        print(f'Connective indices analyzed in {end - start} seconds.')
         return doc
 
     def __get_causal_connectives_incidence(self, doc: Doc) -> float:

@@ -1,6 +1,6 @@
 from spacy.language import Language
 from spacy.tokens import Doc
-from typing import List
+from time import time
 
 
 class SyntacticPatternDensityIndices:
@@ -44,11 +44,14 @@ class SyntacticPatternDensityIndices:
         '''
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
-            
+        
+        print('Analyzing syntactic pattern density indices.')
+        start = time()
         doc._.syntactic_pattern_density_indices['DRNP'] = self.__get_noun_phrase_density(doc)
         doc._.syntactic_pattern_density_indices['DRVP'] = self.__get_verb_phrase_density(doc)
         doc._.syntactic_pattern_density_indices['DRNEG'] = self.__get_negation_expressions_density(doc)
-        
+        end = time()
+        print(f'Syntactic pattern density indices analyzed in {end - start} seconds.')
         return doc
 
     def __get_noun_phrase_density(self, doc: Doc) -> float:

@@ -5,8 +5,6 @@ from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.tokens import Span
 
-from text_complexity_analyzer_cm.utils.utils import is_word
-
 
 def doc_non_empty_sentences_getter(doc: Doc) -> Iterator:
     '''
@@ -79,8 +77,14 @@ class Paragraphizer:
         for start_match in separator_indices:
             index_start_match = start_match.start() # Initial character of the paragraph separator
             span_paragraph_sep = doc.char_span(index_start_match, index_start_match + length_of_separator) # Get the span of the character separator
+            # In case an empty paragraph was found
+            if span_paragraph_sep is None:
+                continue
+            
             span_paragraph = doc[token_i:span_paragraph_sep.start + 1] # Get the paragraph
-            paragraphs.append(span_paragraph) # Add the paragraph span
+            # Add paragraph if it's not empty
+            if len(span_paragraph.text.strip()) > 0:
+                paragraphs.append(span_paragraph) # Add the paragraph span
             token_i = span_paragraph_sep.end
         # Add the last paragraph
         if token_i != len(doc):

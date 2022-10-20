@@ -2,8 +2,6 @@ from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.tokens import Span
 
-from typing import List
-
 
 class WordsBeforeMainVerbCounter:
     '''

@@ -1,4 +1,6 @@
+import re
 import spacy
+import textwrap
 
 from spacy.tokens import Doc
 from spacy.tokens import Span
@@ -85,3 +87,17 @@ def split_doc_into_sentences(doc: Doc) -> List[Span]:
     return [s
             for s in doc.sents
             if len(s.text.strip()) > 0]
+
+def preprocess_text_spanish(text: str) -> str:
+    '''
+    Function that deletes the extra line breaks in between paragraphs.
+
+    Parameters:
+    text(str): The text to clean.
+
+    Returns:
+    str: The text cleaned.
+    '''
+    clean_text = re.sub(r'\n\n\n+', '\n\n', text)
+    clean_text = textwrap.dedent(clean_text)
+    return clean_text

@@ -1,11 +1,7 @@
-import multiprocessing
-
 from spacy.language import Language
 from spacy.tokens import Doc
-from typing import Callable
-from typing import List
-from text_complexity_analyzer_cm.utils.utils import is_word
-from text_complexity_analyzer_cm.utils.utils import split_text_into_paragraphs
+from time import time
+
 
 class WordInformationIndices:
     '''
@@ -46,6 +42,11 @@ class WordInformationIndices:
         Returns:
         Doc: The spacy document analyzed.
         '''
+        if len(doc.text) == 0:
+            raise ValueError('The text is empty.')
+
+        print('Analyzing word information indices')
+        start = time()
         doc._.word_information_indices['WRDNOUN'] = self.__get_noun_incidence(doc)
         doc._.word_information_indices['WRDVERB'] = self.__get_verb_incidence(doc)
         doc._.word_information_indices['WRDADJ'] = self.__get_adjective_incidence(doc)
@@ -57,36 +58,10 @@ class WordInformationIndices:
         doc._.word_information_indices['WRDPRP2p'] = self.__get_personal_pronoun_second_person_plural_form_incidence(doc)
         doc._.word_information_indices['WRDPRP3s'] = self.__get_personal_pronoun_third_person_singular_form_incidence(doc)
         doc._.word_information_indices['WRDPRP3p'] = self.__get_personal_pronoun_third_person_plural_form_incidence(doc)
-        
+        end = time()
+        print(f'Word information indices analyzed in {end - start} seconds.')
+
         return doc
-
-    def _get_word_type_incidence(self, text: str, disable_pipeline :List, counter_function: Callable, word_count: int=None, workers: int=-1) -> float:
-        '''
-        This method calculates the incidence of a certain type of word in a text per {self._incidence} words.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        disable_pipeline(List): The pipeline elements to be disabled.
-        counter_function(Callable): The function that counts the amount of a certain type of word.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        float: The incidence of a certain type of word per {self._incidence} words.
-        '''
-        if len(text) == 0:
-            raise ValueError('The text is empty.')
-        elif workers == 0 or workers < -1:
-            raise ValueError('Workers must be -1 or any positive number greater than 0')
-        else:
-            paragraphs = split_text_into_paragraphs(text) # Obtain paragraphs
-            threads = multiprocessing.cpu_count() if workers == -1 else workers
-            wc = word_count if word_count is not None else self._di.get_word_count_from_text(text)
-            self._nlp.get_pipe('feature counter').counter_function = counter_function
-            words = sum(doc._.feature_count
-                        for doc in self._nlp.pipe(paragraphs, batch_size=threads, disable=disable_pipeline, n_process=threads))
-
-            return (words / wc) * self._incidence
 
     def __get_noun_incidence(self, doc: Doc) -> float:
         '''

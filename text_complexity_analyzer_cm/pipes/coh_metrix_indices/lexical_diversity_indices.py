@@ -1,5 +1,6 @@
 from spacy.language import Language
 from spacy.tokens import Doc
+from time import time
 
 
 class LexicalDiversityIndices:
@@ -42,8 +43,12 @@ class LexicalDiversityIndices:
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
 
+        print('Analyzing lexical diversity indices')
+        start = time()
         doc._.lexical_diversity_indices['LDTTRa'] = self.__get_type_token_ratio_between_all_words(doc)
         doc._.lexical_diversity_indices['LDTTRcw'] = self.__get_type_token_ratio_of_content_words(doc)
+        end = time()
+        print(f'Lexical diversity indices analyzed in {end - start} seconds.')
         return doc
 
     def __get_type_token_ratio_between_all_words(self, doc: Doc) -> float:

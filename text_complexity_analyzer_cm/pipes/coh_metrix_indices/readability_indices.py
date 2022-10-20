@@ -1,5 +1,6 @@
 from spacy.language import Language
 from spacy.tokens import Doc
+from time import time
 
 
 class ReadabilityIndices:
@@ -42,7 +43,11 @@ class ReadabilityIndices:
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
 
+        print('Analyzing readability indices')
+        start = time()
         doc._.readability_indices['RDFHGL'] = self.__calculate_fernandez_huertas_grade_level(doc)
+        end = time()
+        print(f'Readability indices analyzed in {end - start} seconds.')
         return doc
 
     def __calculate_fernandez_huertas_grade_level(self, doc: Doc) -> float:

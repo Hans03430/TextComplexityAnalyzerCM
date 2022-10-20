@@ -5,9 +5,11 @@ import time
 
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from text_complexity_analyzer_cm.constants import BASE_DIRECTORY
+from text_complexity_analyzer_cm.pipes.preprocessing_tokenizer import PreprocessingTokenizer
+from text_complexity_analyzer_cm.pipes.independent_factory import *
 from text_complexity_analyzer_cm.pipes.spanish.factory import *
 
-from typing import Dict
+from typing import Callable, Dict
 from typing import List
 
 
@@ -30,7 +32,7 @@ class TextComplexityAnalyzer:
 
     The example uses the default classifier stored along the library.
     '''
-    def __init__(self, language:str = 'es', load_classifier=True, paragraph_delimiter: str='\n\n') -> None:
+    def __init__(self, language:str = 'es', load_classifier=True, paragraph_delimiter: str='\n\n', preprocessing_func: Callable = lambda text:text) -> None:
         '''
         This constructor initializes the analizer for a specific language. It initializes all used pipes forthe analysis.
 
@@ -47,6 +49,7 @@ class TextComplexityAnalyzer:
         
         self.language = language
         self._nlp = spacy.load(ACCEPTED_LANGUAGES[language], exclude=['ner'])
+        self._nlp.tokenizer = PreprocessingTokenizer(self._nlp.tokenizer, preprocessing_func)
         self._nlp.max_length = 3000000
         self._nlp.add_pipe('sentencizer')
         self._nlp.add_pipe('paragraphizer', config={'paragraph_delimiter': paragraph_delimiter})
@@ -72,6 +75,7 @@ class TextComplexityAnalyzer:
         self._nlp.add_pipe('referential_cohesion_indices')
         self._nlp.add_pipe('informative_word_tagger')
         self._nlp.add_pipe('word_information_indices')
+        self._nlp.add_pipe('wrapper_serializer', last=True)
         # Load default classifier if enabled
         if load_classifier:
             self.load_default_classifier()
@@ -85,194 +89,14 @@ class TextComplexityAnalyzer:
         self._classifier = pickle.load(open(f'{BASE_DIRECTORY}/model/classifier.pkl', 'rb'))
         self._scaler = pickle.load(open(f'{BASE_DIRECTORY}/model/scaler.pkl', 'rb'))
 
-
-    def calculate_descriptive_indices_for_one_text(self, text: str, workers: int=-1) -> Dict:
-        '''
-        This method calculates the descriptive indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        Dict: The dictionary with the descriptive indices.
-        '''
-        indices = {}
-        indices['DESPC'] = self._di.get_paragraph_count_from_text(text=text)
-        indices['DESSC'] = self._di.get_sentence_count_from_text(text=text, workers=workers)
-        indices['DESWC'] = self._di.get_word_count_from_text(text=text, workers=workers)
-        length_of_paragraph = self._di.get_length_of_paragraphs(text=text, workers=workers)
-        indices['DESPL'] = length_of_paragraph.mean
-        indices['DESPLd'] = length_of_paragraph.std
-        length_of_sentences = self._di.get_length_of_sentences(text=text, workers=workers)
-        indices['DESSL'] = length_of_sentences.mean
-        indices['DESSLd'] = length_of_sentences.std
-        syllables_per_word = self._di.get_syllables_per_word(text=text, workers=workers)
-        indices['DESWLsy'] = syllables_per_word.mean
-        indices['DESWLsyd'] = syllables_per_word.std
-        length_of_words = self._di.get_length_of_words(text=text, workers=workers)
-        indices['DESWLlt'] = length_of_words.mean
-        indices['DESWLltd'] = length_of_words.std
-        return indices
-
-    def calculate_word_information_indices_for_one_text(self, text: str, workers: int=-1, word_count: int=None) -> Dict:
-        '''
-        This method calculates the descriptive indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-        word_count(int): The amount of words that the current text has in order to calculate the incidence.
-
-        Returns:
-        Dict: The dictionary with the word information indices.
-        '''
-        indices = {}
-        indices['WRDNOUN'] = self._wii.get_noun_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDVERB'] = self._wii.get_verb_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDADJ'] = self._wii.get_adjective_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDADV'] = self._wii.get_adverb_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDPRO'] = self._wii.get_personal_pronoun_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDPRP1s'] = self._wii.get_personal_pronoun_first_person_singular_form_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDPRP1p'] = self._wii.get_personal_pronoun_first_person_plural_form_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDPRP2s'] = self._wii.get_personal_pronoun_second_person_singular_form_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDPRP2p'] = self._wii.get_personal_pronoun_second_person_plural_form_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDPRP3s'] = self._wii.get_personal_pronoun_third_person_singular_form_incidence(text=text, workers=workers, word_count=word_count)
-        indices['WRDPRP3p'] = self._wii.get_personal_pronoun_third_person_plural_form_incidence(text=text, workers=workers, word_count=word_count)
-        
-        return indices
-
-    def calculate_syntactic_pattern_density_indices_for_one_text(self, text: str, workers: int=-1, word_count: int=None) -> Dict:
-        '''
-        This method calculates the syntactic pattern indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words that the current text has in order to calculate the incidence.
-
-        Returns:
-        Dict: The dictionary with the syntactic pattern indices.
-        '''
-        indices = {}
-        indices['DRNP'] = self._spdi.get_noun_phrase_density(text=text, workers=workers, word_count=word_count)
-        indices['DRVP'] = self._spdi.get_verb_phrase_density(text=text, workers=workers, word_count=word_count)
-        indices['DRNEG'] = self._spdi.get_negation_expressions_density(text=text, workers=workers, word_count=word_count)
-
-        return indices
-        
-    def calculate_syntactic_complexity_indices_for_one_text(self, text: str, workers: int=-1) -> Dict:
-        '''
-        This method calculates the syntactic complexity indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        Dict: The dictionary with the syntactic complexity indices.
-        '''
-        indices = {}
-        indices['SYNNP'] = self._sci.get_mean_number_of_modifiers_per_noun_phrase(text=text, workers=workers)
-        indices['SYNLE'] = self._sci.get_mean_number_of_words_before_main_verb(text=text, workers=workers)
-
-        return indices
-
-    def calculate_connective_indices_for_one_text(self, text: str, workers: int=-1, word_count: int=None) -> Dict:
-        '''
-        This method calculates the connectives indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-        word_count(int): The amount of words that the current text has in order to calculate the incidence.
-
-        Returns:
-        Dict: The dictionary with the connectives indices.
-        '''
-        indices = {}
-        indices['CNCAll'] = self._ci.get_all_connectives_incidence(text=text, workers=workers, word_count=word_count)
-        indices['CNCCaus'] = self._ci.get_causal_connectives_incidence(text=text, workers=workers, word_count=word_count)
-        indices['CNCLogic'] = self._ci.get_logical_connectives_incidence(text=text, workers=workers, word_count=word_count)
-        indices['CNCADC'] = self._ci.get_adversative_connectives_incidence(text=text, workers=workers, word_count=word_count)
-        indices['CNCTemp'] = self._ci.get_temporal_connectives_incidence(text=text, workers=workers, word_count=word_count)
-        indices['CNCAdd'] = self._ci.get_additive_connectives_incidence(text=text, workers=workers, word_count=word_count)
-
-        return indices
-
-    def calculate_lexical_diversity_indices_for_one_text(self, text: str, workers: int=-1) -> Dict:
-        '''
-        This method calculates the lexical diversity indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-        word_count(int): The amount of words that the current text has in order to calculate the incidence.
-
-        Returns:
-        Dict: The dictionary with the lexical diversity indices.
-        '''
-        indices = {}
-        indices['LDTTRa'] = self._ldi.get_type_token_ratio_between_all_words(text=text, workers=workers)
-        indices['LDTTRcw'] = self._ldi.get_type_token_ratio_of_content_words(text=text, workers=workers)
-
-        return indices
-
-    def calculate_readability_indices_for_one_text(self, text: str, workers: int=-1, mean_syllables_per_word: int=None, mean_words_per_sentence: int=None) -> Dict:
-        '''
-        This method calculates the readability indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-        mean_syllables_per_word(int): The mean of syllables per word in the text.
-        mean_words_per_sentence(int): The mean amount of words per sentences in the text.
-
-        Returns:
-        Dict: The dictionary with the readability indices.
-        '''
-        indices = {}
-        
-        if self.language == 'es':
-            indices['RDFHGL'] = self._ri.calculate_fernandez_huertas_grade_level(text=text, workers=workers, mean_words_per_sentence=mean_words_per_sentence, mean_syllables_per_word=mean_syllables_per_word)
-
-        return indices
-
-    def calculate_referential_cohesion_indices_for_one_text(self, text: str, workers: int=-1) -> Dict:
-        '''
-        This method calculates the referential cohesion indices and stores them in a dictionary.
-
-        Parameters:
-        text(str): The text to be analyzed.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        Dict: The dictionary with the readability indices.
-        '''
-        indices = {}
-        indices['CRFNO1'] = self._rci.get_noun_overlap_adjacent_sentences(text=text, workers=workers)
-        indices['CRFNOa'] = self._rci.get_noun_overlap_all_sentences(text=text, workers=workers)
-        indices['CRFAO1'] = self._rci.get_argument_overlap_adjacent_sentences(text=text, workers=workers)
-        indices['CRFAOa'] = self._rci.get_argument_overlap_all_sentences(text=text, workers=workers)
-        indices['CRFSO1'] = self._rci.get_stem_overlap_adjacent_sentences(text=text, workers=workers)
-        indices['CRFSOa'] = self._rci.get_stem_overlap_all_sentences(text=text, workers=workers)
-        content_word_overlap_adjacent = self._rci.get_content_word_overlap_adjacent_sentences(text=text, workers=workers)
-        indices['CRFCWO1'] = content_word_overlap_adjacent.mean
-        indices['CRFCWO1d'] = content_word_overlap_adjacent.std
-        content_word_overlap_all = self._rci.get_content_word_overlap_all_sentences(text=text, workers=workers)
-        indices['CRFCWOa'] = content_word_overlap_all.mean
-        indices['CRFCWOad'] = content_word_overlap_all.std
-        indices['CRFANP1'] = self._rci.get_anaphore_overlap_adjacent_sentences(text=text, workers=workers)
-        indices['CRFANPa'] = self._rci.get_anaphore_overlap_all_sentences(text=text, workers=workers)
-
-        return indices
-
-    def calculate_all_indices_for_texts(self, texts: List[str], workers: int=-1) -> List[Dict]:
+    def calculate_all_indices_for_texts(self, texts: List[str], workers: int=-1, batch_size: int=1) -> List[Dict]:
         '''
         This method calculates all indices for a list of texts using multiprocessing, if available, and stores them in a list of dictionaries.
 
         Parameters:
         texts(List[str]): The texts to be analyzed.
         workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
+        batch_size(int): Amount of texts that each worker will analyze sequentially until no more texts are left.
 
         Returns:
         List[Dict]: A list with the dictionaries containing the indices for all texts sent for analysis.
@@ -284,18 +108,14 @@ class TextComplexityAnalyzer:
             start = time.time()
             threads = multiprocessing.cpu_count() if workers == -1 else workers  
             # Process all texts using multiprocessing
-            for doc in self._nlp.pipe(texts, batch_size=threads, n_process=threads):
-                print(doc._.descriptive_indices)
-                print(doc._.readability_indices)
-                print(doc._.syntactic_pattern_density_indices)
-                print(doc._.syntactic_complexity_indices)
-                print(doc._.lexical_diversity_indices)
-                print(doc._.referential_cohesion_indices)
-                print(doc._.connective_indices)
-                print(doc._.word_information_indices)
+            metrics = [
+                doc._.coh_metrix_indices
+                for doc in self._nlp.pipe(texts, batch_size=batch_size, n_process=threads)
+            ]
                 
             end = time.time()
             print(f'Texts analyzed in {end - start} seconds.')
+            return metrics
 
 
     def predict_text_category(self, text: str, workers: int=-1, classifier=None, scaler=None, indices: List=None) -> int:

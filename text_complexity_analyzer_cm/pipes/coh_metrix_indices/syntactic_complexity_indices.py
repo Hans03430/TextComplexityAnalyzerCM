@@ -2,6 +2,7 @@ import statistics
 
 from spacy.language import Language
 from spacy.tokens import Doc
+from time import time
 
 
 class SyntacticComplexityIndices:
@@ -45,9 +46,12 @@ class SyntacticComplexityIndices:
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
 
+        print('Analyzing syntactic complexity indices')
+        start = time()
         doc._.syntactic_complexity_indices['SYNNP'] = self.__get_mean_number_of_modifiers_per_noun_phrase(doc)
         doc._.syntactic_complexity_indices['SYNLE'] = self.__get_mean_number_of_words_before_main_verb(doc)
-        
+        end = time()
+        print(f'Syntactic complexity indices analyzed in {end - start} seconds.')
         return doc
 
     def __get_mean_number_of_modifiers_per_noun_phrase(self, doc: Doc) -> float:

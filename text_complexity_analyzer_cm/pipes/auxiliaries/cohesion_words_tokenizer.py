@@ -3,8 +3,6 @@ from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.tokens import Span
 
-from text_complexity_analyzer_cm.utils.utils import is_content_word
-
 
 def doc_content_words_normalized_getter(doc: Doc) -> Iterator:
     '''

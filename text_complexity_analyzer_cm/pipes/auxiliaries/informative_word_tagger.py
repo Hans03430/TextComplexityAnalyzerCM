@@ -2,8 +2,6 @@ from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.tokens import Span
 
-from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
-
 
 def doc_nouns_getter(doc: Doc) -> str:
     '''
@@ -277,5 +275,4 @@ class InformativeWordTagger:
             doc._.pronouns_singular_third_person_count += sent._.pronouns_singular_third_person_count
             doc._.pronouns_plural_third_person_count += sent._.pronouns_plural_third_person_count
 
-        print(list(doc._.verbs))
         return doc

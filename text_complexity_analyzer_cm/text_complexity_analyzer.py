@@ -70,6 +70,8 @@ class TextComplexityAnalyzer:
         self._nlp.add_pipe('connective_indices')
         self._nlp.add_pipe('cohesion_words_tokenizer')
         self._nlp.add_pipe('referential_cohesion_indices')
+        self._nlp.add_pipe('informative_word_tagger')
+        self._nlp.add_pipe('word_information_indices')
         # Load default classifier if enabled
         if load_classifier:
             self.load_default_classifier()
@@ -284,12 +286,13 @@ class TextComplexityAnalyzer:
             # Process all texts using multiprocessing
             for doc in self._nlp.pipe(texts, batch_size=threads, n_process=threads):
                 print(doc._.descriptive_indices)
-                print(doc._.lexical_diversity_indices)
                 print(doc._.readability_indices)
-                print(doc._.syntactic_complexity_indices)
                 print(doc._.syntactic_pattern_density_indices)
-                print(doc._.connective_indices)
+                print(doc._.syntactic_complexity_indices)
+                print(doc._.lexical_diversity_indices)
                 print(doc._.referential_cohesion_indices)
+                print(doc._.connective_indices)
+                print(doc._.word_information_indices)
                 
             end = time.time()
             print(f'Texts analyzed in {end - start} seconds.')

@@ -50,12 +50,12 @@ class ConnectiveIndices:
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
 
+        doc._.connective_indices['CNCAll'] = self.__get_all_connectives_incidence(doc)
         doc._.connective_indices['CNCCaus'] = self.__get_causal_connectives_incidence(doc)
         doc._.connective_indices['CNCLogic'] = self.__get_logical_connectives_incidence(doc)
         doc._.connective_indices['CNCADC'] = self.__get_adversative_connectives_incidence(doc)
         doc._.connective_indices['CNCTemp'] = self.__get_temporal_connectives_incidence(doc)
         doc._.connective_indices['CNCAdd'] = self.__get_additive_connectives_incidence(doc)
-        doc._.connective_indices['CNCAll'] = self.__get_all_connectives_incidence(doc)
         return doc
 
     def __get_causal_connectives_incidence(self, doc: Doc) -> float:

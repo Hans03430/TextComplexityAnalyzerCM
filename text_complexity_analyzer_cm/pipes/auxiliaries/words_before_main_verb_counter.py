@@ -1,9 +1,7 @@
 from spacy.language import Language
 from spacy.tokens import Doc
 from spacy.tokens import Span
-from spacy.util import filter_spans
 
-from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from typing import List
 
 

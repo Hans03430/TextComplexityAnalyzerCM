@@ -49,8 +49,8 @@ class DescriptiveIndices:
         doc._.descriptive_indices['DESWC'] = doc._.alpha_words_count
         self.__get_length_of_paragraphs(doc)
         self.__get_length_of_sentences(doc)
-        self.__get_length_of_words(doc)
         self.__get_syllables_per_word(doc)
+        self.__get_length_of_words(doc)
         return doc
 
     def _get_mean_std_of_metric(self, doc: Doc, counter_function: Callable, statistic_type: str='all') -> StatisticsResults:

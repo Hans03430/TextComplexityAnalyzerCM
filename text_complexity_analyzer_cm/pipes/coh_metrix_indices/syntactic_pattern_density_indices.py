@@ -44,10 +44,11 @@ class SyntacticPatternDensityIndices:
         '''
         if len(doc.text) == 0:
             raise ValueError('The text is empty.')
-
+            
         doc._.syntactic_pattern_density_indices['DRNP'] = self.__get_noun_phrase_density(doc)
         doc._.syntactic_pattern_density_indices['DRVP'] = self.__get_verb_phrase_density(doc)
         doc._.syntactic_pattern_density_indices['DRNEG'] = self.__get_negation_expressions_density(doc)
+        
         return doc
 
     def __get_noun_phrase_density(self, doc: Doc) -> float:

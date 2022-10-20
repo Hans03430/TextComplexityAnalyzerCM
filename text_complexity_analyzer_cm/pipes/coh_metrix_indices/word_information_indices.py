@@ -1,10 +1,9 @@
 import multiprocessing
-import spacy
 
+from spacy.language import Language
+from spacy.tokens import Doc
 from typing import Callable
 from typing import List
-from text_complexity_analyzer_cm.coh_metrix_indices.descriptive_indices import DescriptiveIndices
-from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from text_complexity_analyzer_cm.utils.utils import is_word
 from text_complexity_analyzer_cm.utils.utils import split_text_into_paragraphs
 
@@ -12,31 +11,54 @@ class WordInformationIndices:
     '''
     This class will handle all operations to obtain the word information indices of a text according to Coh-Metrix.
     '''
-    def __init__(self, nlp, language: str='es', descriptive_indices: DescriptiveIndices=None) -> None:
+    name = 'word_information_indices'
+
+    def __init__(self, nlp: Language) -> None:
         '''
         The constructor will initialize this object that calculates the word information indices for a specific language of those that are available.
 
         Parameters:
-        nlp: The spacy model that corresponds to a language.
-        language(str): The language that the texts to process will have.
-        descriptive_indices(DescriptiveIndices): The class that calculates the descriptive indices of a text in a certain language.
-
+        nlp(Language): The spacy model that corresponds to a language.
+        
         Returns:
         None.
         '''
-        if not language in ACCEPTED_LANGUAGES:
-            raise ValueError(f'Language {language} is not supported yet')
-        elif descriptive_indices is not None and descriptive_indices.language != language:
-            raise ValueError(f'The descriptive indices analyzer must be of the same language as the word information analyzer.')
+        required_pipes = ['alphanumeric_word_identifier', 'informative_word_tagger']
+
+        if not all((
+            pipe in nlp.pipe_names
+            for pipe in required_pipes
+        )):
+            message = 'Word information indices pipe need the following pipes: ' + ', '.join(required_pipes)
+            raise AttributeError(message)
         
-        self.language = language
         self._nlp = nlp
         self._incidence = 1000
+        Doc.set_extension('word_information_indices', default={})
 
-        if descriptive_indices is None: # Assign the descriptive indices to an attribute
-            self._di = DescriptiveIndices(language=language, nlp=nlp)
-        else:
-            self._di = descriptive_indices
+    def __call__(self, doc: Doc) -> Doc:
+        '''
+        This method will calculate the word information indices
+
+        Parameters:
+        doc(Doc): A Spacy document.
+
+        Returns:
+        Doc: The spacy document analyzed.
+        '''
+        doc._.word_information_indices['WRDNOUN'] = self.__get_noun_incidence(doc)
+        doc._.word_information_indices['WRDVERB'] = self.__get_verb_incidence(doc)
+        doc._.word_information_indices['WRDADJ'] = self.__get_adjective_incidence(doc)
+        doc._.word_information_indices['WRDADV'] = self.__get_adverb_incidence(doc)
+        doc._.word_information_indices['WRDPRO'] = self.__get_personal_pronoun_incidence(doc)
+        doc._.word_information_indices['WRDPRP1s'] = self.__get_personal_pronoun_first_person_singular_form_incidence(doc)
+        doc._.word_information_indices['WRDPRP1p'] = self.__get_personal_pronoun_first_person_plural_form_incidence(doc)
+        doc._.word_information_indices['WRDPRP2s'] = self.__get_personal_pronoun_second_person_singular_form_incidence(doc)
+        doc._.word_information_indices['WRDPRP2p'] = self.__get_personal_pronoun_second_person_plural_form_incidence(doc)
+        doc._.word_information_indices['WRDPRP3s'] = self.__get_personal_pronoun_third_person_singular_form_incidence(doc)
+        doc._.word_information_indices['WRDPRP3p'] = self.__get_personal_pronoun_third_person_plural_form_incidence(doc)
+        
+        return doc
 
     def _get_word_type_incidence(self, text: str, disable_pipeline :List, counter_function: Callable, word_count: int=None, workers: int=-1) -> float:
         '''
@@ -66,225 +88,134 @@ class WordInformationIndices:
 
             return (words / wc) * self._incidence
 
-    def get_noun_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+    def __get_noun_incidence(self, doc: Doc) -> float:
         '''
         This method calculates the incidence of nouns in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analyzed.
+        
         Returns:
         float: The incidence of nouns per {self._incidence} words.
         '''
-        noun_counter = lambda doc: sum(1
-                                       for token in doc
-                                       if is_word(token) and token.pos_ in ['NOUN', 'PROPN'])
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
+        return (doc._.nouns_count / doc._.alpha_words_count) * self._incidence
 
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=noun_counter, workers=workers)
-
-    def get_verb_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+    def __get_verb_incidence(self, doc: Doc) -> float:
         '''
-        This method calculates the incidence of verbs in a text per {self._incidence} words.
+        This method calculates the incidence of verb in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analyzed.
+        
         Returns:
-        float: The incidence of verbs per {self._incidence} words.
+        float: The incidence of verb per {self._incidence} words.
         '''
-        verb_counter = lambda doc: sum(1
-                                       for token in doc
-                                       if is_word(token) and token.pos_ == 'VERB')
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
+        return (doc._.verbs_count / doc._.alpha_words_count) * self._incidence
 
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=verb_counter, workers=workers)
-
-    def get_adjective_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+    def __get_adjective_incidence(self, doc: Doc) -> float:
         '''
-        This method calculates the incidence of adjectives in a text per {self._incidence} words.
+        This method calculates the incidence of adjective in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analyzed.
+        
         Returns:
-        float: The incidence of adjectives per {self._incidence} words.
+        float: The incidence of adjective per {self._incidence} words.
         '''
-        adjective_counter = lambda doc: sum(1
-                                            for token in doc
-                                            if is_word(token) and token.pos_ == 'ADJ')
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
+        return (doc._.adjectives_count / doc._.alpha_words_count) * self._incidence
 
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=adjective_counter, workers=workers)
-
-    def get_adverb_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+    def __get_adverb_incidence(self, doc: Doc) -> float:
         '''
-        This method calculates the incidence of adverbs in a text per {self._incidence} words.
+        This method calculates the incidence of adverb in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analyzed.
+        
         Returns:
-        float: The incidence of adverbs per {self._incidence} words.
+        float: The incidence of adverb per {self._incidence} words.
         '''
-        adverb_counter = lambda doc: sum(1
-                                         for token in doc
-                                         if is_word(token) and token.pos_ == 'ADV')
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
+        return (doc._.adverbs_count / doc._.alpha_words_count) * self._incidence
 
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=adverb_counter, workers=workers)
-
-    def get_personal_pronoun_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+    def __get_personal_pronoun_incidence(self, doc: Doc) -> float:
         '''
         This method calculates the incidence of personal pronouns in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
+        doc(Doc): The text to be analyzed.
+        
         Returns:
         float: The incidence of personal pronouns per {self._incidence} words.
         '''
-        if self.language == 'es':
-            pronoun_counter = lambda doc: sum(1
-                                              for token in doc
-                                              if is_word(token) and token.pos_ == 'PRON' in token.tag_)
-        
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
+        return (doc._.pronouns_count / doc._.alpha_words_count) * self._incidence
 
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=pronoun_counter, workers=workers)
-
-    def get_personal_pronoun_first_person_singular_form_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+    def __get_personal_pronoun_first_person_singular_form_incidence(self, doc: Doc) -> float:
         '''
-        This method calculates the incidence of personal pronouns in first person and singular form in a text per {self._incidence} words.
+        This method calculates the incidence of personal pronouns in first person and singular in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        float: The incidence of personal pronouns in first person and singular form per {self._incidence} words.
-        '''
-        if self.language == 'es':
-            pronoun_counter = lambda doc: sum(1
-                                              for token in doc
-                                              if is_word(token) and token.pos_ == 'PRON' and 'Number=Sing' in token.tag_ and 'Person=1' in token.tag_)
+        doc(Doc): The text to be analyzed.
         
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
-
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=pronoun_counter, workers=workers)
-
-    def get_personal_pronoun_first_person_plural_form_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+        Returns:
+        float: The incidence of personal pronouns in first person and singular per {self._incidence} words.
         '''
-        This method calculates the incidence of personal pronouns in first person and plural form in a text per {self._incidence} words.
+        return (doc._.pronouns_singular_first_person_count / doc._.alpha_words_count) * self._incidence
+
+    def __get_personal_pronoun_first_person_plural_form_incidence(self, doc: Doc) -> float:
+        '''
+        This method calculates the incidence of personal pronouns in first person and plural in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        float: The incidence of personal pronouns in first person and plural form per {self._incidence} words.
-        '''
-        if self.language == 'es':
-            pronoun_counter = lambda doc: sum(1
-                                              for token in doc
-                                              if is_word(token) and token.pos_ == 'PRON' and 'Number=Plur' in token.tag_ and 'Person=1' in token.tag_)
+        doc(Doc): The text to be analyzed.
         
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
-
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=pronoun_counter, workers=workers)
-
-    def get_personal_pronoun_second_person_singular_form_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+        Returns:
+        float: The incidence of personal pronouns in first person and plural per {self._incidence} words.
         '''
-        This method calculates the incidence of personal pronouns in second person and singular form in a text per {self._incidence} words.
+        return (doc._.pronouns_plural_first_person_count / doc._.alpha_words_count) * self._incidence
+
+    def __get_personal_pronoun_second_person_singular_form_incidence(self, doc: Doc) -> float:
+        '''
+        This method calculates the incidence of personal pronouns in second person and singular in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        float: The incidence of personal pronouns in second person and singular form per {self._incidence} words.
-        '''
-        if self.language == 'es':
-            pronoun_counter = lambda doc: sum(1
-                                              for token in doc
-                                              if is_word(token) and token.pos_ == 'PRON' and 'Number=Sing' in token.tag_ and 'Person=2' in token.tag_)
+        doc(Doc): The text to be analyzed.
         
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
-
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=pronoun_counter, workers=workers)
-
-    def get_personal_pronoun_second_person_plural_form_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+        Returns:
+        float: The incidence of personal pronouns in second person and singular per {self._incidence} words.
         '''
-        This method calculates the incidence of personal pronouns in second person and plural form in a text per {self._incidence} words.
+        return (doc._.pronouns_singular_second_person_count / doc._.alpha_words_count) * self._incidence
+
+    def __get_personal_pronoun_second_person_plural_form_incidence(self, doc: Doc) -> float:
+        '''
+        This method calculates the incidence of personal pronouns in second person and plural in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        float: The incidence of personal pronouns in second person and plural form per {self._incidence} words.
-        '''
-        if self.language == 'es':
-            pronoun_counter = lambda doc: sum(1
-                                              for token in doc
-                                              if is_word(token) and token.pos_ == 'PRON' and 'Number=Plur' in token.tag_ and 'Person=2' in token.tag_)
+        doc(Doc): The text to be analyzed.
         
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
-
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=pronoun_counter, workers=workers)
-
-    def get_personal_pronoun_third_person_singular_form_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+        Returns:
+        float: The incidence of personal pronouns in second person and plural per {self._incidence} words.
         '''
-        This method calculates the incidence of personal pronouns in third person and singular form in a text per {self._incidence} words.
+        return (doc._.pronouns_plural_second_person_count / doc._.alpha_words_count) * self._incidence
+
+    def __get_personal_pronoun_third_person_singular_form_incidence(self, doc: Doc) -> float:
+        '''
+        This method calculates the incidence of personal pronouns in third person and singular in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        float: The incidence of personal pronouns in third person and singular form per {self._incidence} words.
-        '''
-        if self.language == 'es':
-            pronoun_counter = lambda doc: sum(1
-                                              for token in doc
-                                              if is_word(token) and token.pos_ == 'PRON' and 'Number=Sing' in token.tag_ and 'Person=3' in token.tag_)
+        doc(Doc): The text to be analyzed.
         
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
-
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=pronoun_counter, workers=workers)
-
-    def get_personal_pronoun_third_person_plural_form_incidence(self, text: str, word_count: int=None, workers: int=-1) -> float:
+        Returns:
+        float: The incidence of personal pronouns in third person and singular per {self._incidence} words.
         '''
-        This method calculates the incidence of personal pronouns in third person and plural form in a text per {self._incidence} words.
+        return (doc._.pronouns_singular_third_person_count / doc._.alpha_words_count) * self._incidence
+
+    def __get_personal_pronoun_third_person_plural_form_incidence(self, doc: Doc) -> float:
+        '''
+        This method calculates the incidence of personal pronouns in third person and plural in a text per {self._incidence} words.
 
         Parameters:
-        text(str): The text to be analyzed.
-        word_count(int): The amount of words in the text.
-        workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
-
-        Returns:
-        float: The incidence of personal pronouns in third person and plural form per {self._incidence} words.
-        '''
-        if self.language == 'es':
-            pronoun_counter = lambda doc: sum(1
-                                              for token in doc
-                                              if is_word(token) and token.pos_ == 'PRON' and 'Number=Plur' in token.tag_ and 'Person=3' in token.tag_)
+        doc(Doc): The text to be analyzed.
         
-        disable_pipeline = [pipe for pipe in self._nlp.pipe_names if pipe not in ['tagger', 'feature counter']]
-
-        return self._get_word_type_incidence(text, disable_pipeline=disable_pipeline, counter_function=pronoun_counter, workers=workers)
+        Returns:
+        float: The incidence of personal pronouns in third person and plural per {self._incidence} words.
+        '''
+        return (doc._.pronouns_plural_third_person_count / doc._.alpha_words_count) * self._incidence

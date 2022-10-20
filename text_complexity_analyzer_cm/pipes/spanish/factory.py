@@ -7,6 +7,7 @@ from text_complexity_analyzer_cm.pipes.auxiliaries.alphanumeric_word_identifier 
 from text_complexity_analyzer_cm.pipes.auxiliaries.causal_connectives_tagger import CausalConnectivesTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.cohesion_words_tokenizer import CohesionWordsTokenizer
 from text_complexity_analyzer_cm.pipes.auxiliaries.content_word_identifier import ContentWordIdentifier
+from text_complexity_analyzer_cm.pipes.auxiliaries.informative_word_tagger import InformativeWordTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.logical_connectives_tagger import LogicalConnectivesTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.negative_expression_tagger import NegativeExpressionTagger
 from text_complexity_analyzer_cm.pipes.auxiliaries.noun_phrase_tagger import NounPhraseTagger
@@ -22,6 +23,7 @@ from text_complexity_analyzer_cm.pipes.coh_metrix_indices.readability_indices im
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.referential_cohesion_indices import ReferentialCohesionIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.syntactic_complexity_indices import SyntacticComplexityIndices
 from text_complexity_analyzer_cm.pipes.coh_metrix_indices.syntactic_pattern_density_indices import SyntacticPatternDensityIndices
+from text_complexity_analyzer_cm.pipes.coh_metrix_indices.word_information_indices import WordInformationIndices
 from text_complexity_analyzer_cm.pipes.spanish.overlap_analyzers import *
 
 @Spanish.factory('alphanumeric_word_identifier')
@@ -337,3 +339,31 @@ def create_es_referential_cohesion_indices(nlp: Language, name: str) -> Referent
     ReferentialCohesionIndices: The pipe that calculates the referential cohesion indices.
     '''
     return ReferentialCohesionIndices(nlp, analyze_noun_overlap, analyze_argument_overlap, analyze_stem_overlap, analyze_content_word_overlap, analyze_anaphore_overlap)
+
+@Spanish.factory('informative_word_tagger')
+def create_es_informative_word_tagger(nlp: Language, name: str) -> InformativeWordTagger:
+    '''
+    Function that creates a informative word tagger pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    CohesionWordsTokenizer: The pipe that tags the informative words.
+    '''
+    return InformativeWordTagger(nlp)
+
+@Spanish.factory('word_information_indices')
+def create_es_word_information_indices(nlp: Language, name: str) -> WordInformationIndices:
+    '''
+    Function that creates word information pipe.
+    
+    Paramters:
+    nlp(Language): Spacy model that will be used for the pipeline.
+    name(str): Name of the pipe.
+
+    Returns:
+    WordInformationIndices: The pipe that calculates the word information indices.
+    '''
+    return WordInformationIndices(nlp)

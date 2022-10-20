@@ -47,6 +47,7 @@ class SyntacticComplexityIndices:
 
         doc._.syntactic_complexity_indices['SYNNP'] = self.__get_mean_number_of_modifiers_per_noun_phrase(doc)
         doc._.syntactic_complexity_indices['SYNLE'] = self.__get_mean_number_of_words_before_main_verb(doc)
+        
         return doc
 
     def __get_mean_number_of_modifiers_per_noun_phrase(self, doc: Doc) -> float:

@@ -7,9 +7,8 @@ with open('requirements.txt', 'r') as requirements:
 
 setup(
     name='text-complexity-analyzer-cm',
-    author='Hans Matos Rios',
-    author_email='hans.matos@pucp.edu.pe',
-    version='0.1.0',
+    author='Hans M.',
+    version='1.0.0',
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,

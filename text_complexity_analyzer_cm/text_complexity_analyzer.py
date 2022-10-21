@@ -3,6 +3,7 @@ import pickle
 import spacy
 import time
 
+from os.path import join
 from text_complexity_analyzer_cm.constants import ACCEPTED_LANGUAGES
 from text_complexity_analyzer_cm.constants import BASE_DIRECTORY
 from text_complexity_analyzer_cm.pipes.preprocessing_tokenizer import PreprocessingTokenizer
@@ -32,13 +33,12 @@ class TextComplexityAnalyzer:
 
     The example uses the default classifier stored along the library.
     '''
-    def __init__(self, language:str = 'es', load_classifier=True, paragraph_delimiter: str='\n\n', preprocessing_func: Callable = lambda text:text) -> None:
+    def __init__(self, language:str = 'es', paragraph_delimiter: str='\n\n', preprocessing_func: Callable = lambda text:text) -> None:
         '''
         This constructor initializes the analizer for a specific language. It initializes all used pipes forthe analysis.
 
         Parameters:
         language(str): The language that the texts are in.
-        load_classifier(bool): Flag to load the default prediction model or not.
         paragraph_delimiter(str): Separator to consider for the paragraphs.
         
         Returns:
@@ -76,18 +76,17 @@ class TextComplexityAnalyzer:
         self._nlp.add_pipe('informative_word_tagger')
         self._nlp.add_pipe('word_information_indices')
         self._nlp.add_pipe('wrapper_serializer', last=True)
-        # Load default classifier if enabled
-        if load_classifier:
-            self.load_default_classifier()
-
+        self.load_default_classifier()
         self._indices = ['CNCADC', 'CNCAdd', 'CNCAll', 'CNCCaus', 'CNCLogic', 'CNCTemp', 'CRFANP1', 'CRFANPa', 'CRFAO1', 'CRFAOa', 'CRFCWO1', 'CRFCWO1d', 'CRFCWOa', 'CRFCWOad', 'CRFNO1', 'CRFNOa', 'CRFSO1', 'CRFSOa', 'DESPC', 'DESPL', 'DESPLd', 'DESSC', 'DESSL', 'DESSLd', 'DESWC', 'DESWLlt', 'DESWLltd', 'DESWLsy', 'DESWLsyd', 'DRNEG', 'DRNP', 'DRVP', 'LDTTRa', 'LDTTRcw', 'RDFHGL', 'SYNLE', 'SYNNP', 'WRDADJ', 'WRDADV', 'WRDNOUN', 'WRDPRO', 'WRDPRP1p', 'WRDPRP1s', 'WRDPRP2p', 'WRDPRP2s', 'WRDPRP3p', 'WRDPRP3s', 'WRDVERB']
 
     def load_default_classifier(self) -> None:
         '''
         Method that loads the default classifier used to calculate the text complexity of new texts.
         '''
-        self._classifier = pickle.load(open(f'{BASE_DIRECTORY}/model/classifier.pkl', 'rb'))
-        self._scaler = pickle.load(open(f'{BASE_DIRECTORY}/model/scaler.pkl', 'rb'))
+        class_path = join(BASE_DIRECTORY, 'model', 'classifier.pkl')
+        scale_path = join(BASE_DIRECTORY, 'model', 'scaler.pkl')
+        self._classifier = pickle.load(open(f'{class_path}', 'rb'))
+        self._scaler = pickle.load(open(f'{scale_path}', 'rb'))
 
     def calculate_all_indices_for_texts(self, texts: List[str], workers: int=-1, batch_size: int=1) -> List[Dict]:
         '''
@@ -118,13 +117,14 @@ class TextComplexityAnalyzer:
             return metrics
 
 
-    def predict_text_category(self, text: str, workers: int=-1, classifier=None, scaler=None, indices: List=None) -> int:
+    def predict_text_category(self, texts: List[str], workers: int=-1, batch_size: int=1, classifier=None, scaler=None, indices: List=None) -> int:
         '''
         This method receives a text and predict its category based on the classification model trained.
 
         Parameters:
-        text(str): The text to predict its category.
+        text(List[str]): The list of texts to predict their categories.
         workers(int): Amount of threads that will complete this operation. If it's -1 then all cpu cores will be used.
+        batch_size(int): Amount of texts that each worker will analyze sequentially until no more texts are left.
         classifier: Optional. A supervised learning model that implements the 'predict' method. If None, the default classifier is used.
         scaler: Optional. A object that implements the 'transform' method that scales the indices of the text to analyze. It must be the same as the one used in the classifier, if a scaler was used. Pass None if no scaler was used during the custom classifier's training.
         indices(List): Optional. Ignored if the default classifier is used. The name indices which the classifier was trained with. They must be in the same order as the ones that were used at training and also be the same. 
@@ -141,10 +141,12 @@ class TextComplexityAnalyzer:
         if classifier is not None and scaler is not None and not hasattr(scaler, 'transform'):
             raise ValueError('The custom scaling model (scaler) for the custom classifier must have the \'transform\' method.')
         else:
-            descriptive, word_information, syntactic_pattern, syntactic_complexity, connective, lexical_diversity, readability, referential_cohesion = self.calculate_all_indices_for_one_text(text, workers)
-            metrics = {**descriptive, **word_information, **syntactic_pattern, **syntactic_complexity, **connective, **lexical_diversity, **readability, **referential_cohesion}
+            metrics = self.calculate_all_indices_for_texts(texts, workers=workers, batch_size=batch_size)
+            indices_values = [
+                [metric[key] for key in self._indices]
+                for metric in metrics
+            ]
             if classifier is None: # Default indices
-                indices_values = [[metrics[key] for key in self._indices]]
                 # Check that the classifier was loaded
                 if self._classifier is None:
                     raise AttributeError('The default classifier was not loaded when this object was created.')
@@ -152,6 +154,4 @@ class TextComplexityAnalyzer:
                     return self._classifier.predict(self._scaler.transform(indices_values))
 
             else: # Indices used by the custom classifier
-                indices_values = [[metrics[key] for key in indices]]
-                    
                 return list(classifier.predict(indices_values if scaler is None else scaler.transform(indices_values)))

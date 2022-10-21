@@ -1,9 +1,11 @@
 # Consideraciones antes de usar
 La rama Master se considera desfasada. Usar la rama Production, la cual contará con actualizaciones de la aplicación. La rama Master existe para mantener compatibilidad con el proyecto de tesis que originó este módulo de Python.
 
+Los textos deberán no contener sangría para ninguna de las líneas. Esto se considera para que la funcionalidad que separa el texto en párrafos funcione correctamente.
+
 # Ambiente usado para las pruebas
-* S.O.: Ubuntu 22.04.
-* Versión Python: 3.10.6
+* S.O.: Ubuntu 22.10.
+* Versión Python: 3.10.7
 
 # Ejemplo de uso
 ```py

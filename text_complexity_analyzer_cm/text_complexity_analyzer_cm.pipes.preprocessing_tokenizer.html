@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.pipes.preprocessing_tokenizer</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.pipes.html"><font color="#ffffff">pipes</font></a>.preprocessing_tokenizer</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/preprocessing_tokenizer.py">/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/preprocessing_tokenizer.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.pipes.preprocessing_tokenizer.html#PreprocessingTokenizer">PreprocessingTokenizer</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PreprocessingTokenizer">class <strong>PreprocessingTokenizer</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#PreprocessingTokenizer">PreprocessingTokenizer</a>(tokenizer:&nbsp;<a href="builtins.html#object">object</a>&nbsp;=&nbsp;None,&nbsp;preprocessing_func:&nbsp;Callable&nbsp;=&nbsp;&amp;lt;function&nbsp;<a href="#PreprocessingTokenizer">PreprocessingTokenizer</a>.&amp;lt;lambda&amp;gt;&nbsp;at&nbsp;0x7f35b511f6d0&amp;gt;)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+Class&nbsp;that&nbsp;calls&nbsp;a&nbsp;function&nbsp;that&nbsp;preprocess&nbsp;a&nbsp;text&nbsp;before&nbsp;sending&nbsp;it&nbsp;to&nbsp;Spacy's&nbsp;default&nbsp;tokenizer.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PreprocessingTokenizer-__call__"><strong>__call__</strong></a>(self, text: str) -&gt; spacy.tokens.doc.Doc</dt><dd><tt>When&nbsp;called,&nbsp;the&nbsp;class&nbsp;will&nbsp;preprocess&nbsp;a&nbsp;text&nbsp;and&nbsp;return&nbsp;a&nbsp;Spacy&nbsp;Doc.<br>
+&nbsp;<br>
+Paramters:<br>
+text(str):&nbsp;The&nbsp;text&nbsp;to&nbsp;preprocess.<br>
+&nbsp;<br>
+Returns:<br>
+Doc:&nbsp;The&nbsp;spacy&nbsp;document&nbsp;that&nbsp;is&nbsp;the&nbsp;text.</tt></dd></dl>
+
+<dl><dt><a name="PreprocessingTokenizer-__init__"><strong>__init__</strong></a>(self, tokenizer: object = None, preprocessing_func: Callable = &lt;function PreprocessingTokenizer.&lt;lambda&gt; at 0x7f35b511f6d0&gt;) -&gt; None</dt><dd><tt>Creates&nbsp;the&nbsp;preprocessing&nbsp;tokenizer&nbsp;by&nbsp;receiving&nbsp;spacy's&nbsp;tokenizer.<br>
+&nbsp;<br>
+Parameters:<br>
+tokenizer(Spacy.tokenizer.Tokenizer):&nbsp;Spacy&nbsp;tokenizer.<br>
+&nbsp;<br>
+Returns:<br>
+None</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>Callable</strong> = typing.Callable</td></tr></table>
+</body></html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.pipes.coh_metrix_indices.referential_cohesion_indices</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.pipes.html"><font color="#ffffff">pipes</font></a>.<a href="text_complexity_analyzer_cm.pipes.coh_metrix_indices.html"><font color="#ffffff">coh_metrix_indices</font></a>.referential_cohesion_indices</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/coh_metrix_indices/referential_cohesion_indices.py">/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/coh_metrix_indices/referential_cohesion_indices.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="statistics.html">statistics</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.pipes.coh_metrix_indices.referential_cohesion_indices.html#ReferentialCohesionIndices">ReferentialCohesionIndices</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ReferentialCohesionIndices">class <strong>ReferentialCohesionIndices</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#ReferentialCohesionIndices">ReferentialCohesionIndices</a>(nlp:&nbsp;spacy.language.Language,&nbsp;noun_overlap_func:&nbsp;Callable,&nbsp;argument_overlap_func:&nbsp;Callable,&nbsp;stem_overlap_func:&nbsp;Callable,&nbsp;content_word_overlap_func:&nbsp;Callable,&nbsp;anaphore_overlap_func:&nbsp;Callable)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;will&nbsp;handle&nbsp;all&nbsp;operations&nbsp;to&nbsp;find&nbsp;the&nbsp;synthactic&nbsp;pattern&nbsp;density&nbsp;indices&nbsp;of&nbsp;a&nbsp;text&nbsp;according&nbsp;to&nbsp;Coh-Metrix.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ReferentialCohesionIndices-__call__"><strong>__call__</strong></a>(self, doc: spacy.tokens.doc.Doc) -&gt; spacy.tokens.doc.Doc</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;calculate&nbsp;the&nbsp;referential&nbsp;cohesion&nbsp;indices.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;A&nbsp;Spacy&nbsp;document.<br>
+&nbsp;<br>
+Returns:<br>
+Doc:&nbsp;The&nbsp;analyzed&nbsp;spacy&nbsp;document.</tt></dd></dl>
+
+<dl><dt><a name="ReferentialCohesionIndices-__init__"><strong>__init__</strong></a>(self, nlp: spacy.language.Language, noun_overlap_func: Callable, argument_overlap_func: Callable, stem_overlap_func: Callable, content_word_overlap_func: Callable, anaphore_overlap_func: Callable) -&gt; None</dt><dd><tt>The&nbsp;constructor&nbsp;will&nbsp;initialize&nbsp;this&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;calculates&nbsp;the&nbsp;synthactic&nbsp;pattern&nbsp;density&nbsp;indices&nbsp;for&nbsp;a&nbsp;specific&nbsp;language&nbsp;of&nbsp;those&nbsp;that&nbsp;are&nbsp;available.<br>
+&nbsp;<br>
+Parameters:<br>
+nlp(Language):&nbsp;The&nbsp;spacy&nbsp;model&nbsp;that&nbsp;corresponds&nbsp;to&nbsp;a&nbsp;language.<br>
+&nbsp;<br>
+Returns:<br>
+None.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>name</strong> = 'referential_cohesion_indices'</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-doc_adjacent_sentence_pairs_getter"><strong>doc_adjacent_sentence_pairs_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; Tuple[spacy.tokens.span.Span, spacy.tokens.span.Span]</dt><dd><tt>Iterator&nbsp;that&nbsp;returns&nbsp;all&nbsp;pairs&nbsp;of&nbsp;adjacent&nbsp;sentences.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+Tuple[Span,&nbsp;Span]:&nbsp;Pair&nbsp;of&nbsp;spans&nbsp;that&nbsp;represent&nbsp;two&nbsp;adjacent&nbsp;sentences.</tt></dd></dl>
+ <dl><dt><a name="-doc_all_sentence_pairs_getter"><strong>doc_all_sentence_pairs_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; Tuple[spacy.tokens.span.Span, spacy.tokens.span.Span]</dt><dd><tt>Iterator&nbsp;that&nbsp;returns&nbsp;all&nbsp;pairs&nbsp;of&nbsp;sentences.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+Tuple[Span,&nbsp;Span]:&nbsp;Pair&nbsp;of&nbsp;spans&nbsp;that&nbsp;represent&nbsp;a&nbsp;pair&nbsp;of&nbsp;sentences.</tt></dd></dl>
+ <dl><dt><a name="-tee"><strong>tee</strong></a>(iterable, n=2, /)</dt><dd><tt>Returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;n&nbsp;independent&nbsp;iterators.</tt></dd></dl>
+ <dl><dt><a name="-time"><strong>time</strong></a>(...)</dt><dd><tt><a href="#-time">time</a>()&nbsp;-&gt;&nbsp;floating&nbsp;point&nbsp;number<br>
+&nbsp;<br>
+Return&nbsp;the&nbsp;current&nbsp;time&nbsp;in&nbsp;seconds&nbsp;since&nbsp;the&nbsp;Epoch.<br>
+Fractions&nbsp;of&nbsp;a&nbsp;second&nbsp;may&nbsp;be&nbsp;present&nbsp;if&nbsp;the&nbsp;system&nbsp;clock&nbsp;provides&nbsp;them.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCEPTED_LANGUAGES</strong> = {'es': 'es_core_news_lg'}<br>
+<strong>Callable</strong> = typing.Callable<br>
+<strong>Dict</strong> = typing.Dict<br>
+<strong>Iterator</strong> = typing.Iterator<br>
+<strong>List</strong> = typing.List<br>
+<strong>Tuple</strong> = typing.Tuple</td></tr></table>
+</body></html>

@@ -1,4 +1,3 @@
-from msilib.schema import Directory
 import os
 from text_complexity_analyzer_cm.constants import BASE_DIRECTORY
  
@@ -7,7 +6,7 @@ def write_documentation(directory):
     # Iterate over the elements found
     for element in elements:
         module_name = '.'.join(directory.split('/')[7:])
-        print(module_name, Directory)
+        print(module_name, directory)
         if os.path.isfile(f'{directory}/{element}'):
             if element == '__init__.py': # Write documentation for module
                 os.system(f'python -m pydoc -w {module_name}')

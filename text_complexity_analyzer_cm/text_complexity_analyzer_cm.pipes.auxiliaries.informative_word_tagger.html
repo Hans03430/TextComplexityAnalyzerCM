@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.pipes.auxiliaries.informative_word_tagger</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.pipes.html"><font color="#ffffff">pipes</font></a>.<a href="text_complexity_analyzer_cm.pipes.auxiliaries.html"><font color="#ffffff">auxiliaries</font></a>.informative_word_tagger</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/auxiliaries/informative_word_tagger.py">/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/auxiliaries/informative_word_tagger.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.pipes.auxiliaries.informative_word_tagger.html#InformativeWordTagger">InformativeWordTagger</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="InformativeWordTagger">class <strong>InformativeWordTagger</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#InformativeWordTagger">InformativeWordTagger</a>(nlp:&nbsp;spacy.language.Language)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;pipe&nbsp;identifies&nbsp;nouns,&nbsp;verbs,&nbsp;adverbs,&nbsp;adjectives&nbsp;and&nbsp;pronouns&nbsp;(of&nbsp;different&nbsp;types)&nbsp;per&nbsp;sentence.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="InformativeWordTagger-__call__"><strong>__call__</strong></a>(self, doc: spacy.tokens.doc.Doc) -&gt; spacy.tokens.doc.Doc</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;find&nbsp;all&nbsp;noun&nbsp;phrases&nbsp;and&nbsp;store&nbsp;them&nbsp;in&nbsp;an&nbsp;iterable.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;A&nbsp;Spacy&nbsp;document.<br>
+&nbsp;<br>
+Returns:<br>
+Doc:&nbsp;The&nbsp;spacy&nbsp;document&nbsp;analyzed.</tt></dd></dl>
+
+<dl><dt><a name="InformativeWordTagger-__init__"><strong>__init__</strong></a>(self, nlp: spacy.language.Language) -&gt; None</dt><dd><tt>This&nbsp;constructor&nbsp;will&nbsp;initialize&nbsp;the&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;counts&nbsp;the&nbsp;words&nbsp;before&nbsp;the&nbsp;main&nbsp;verb&nbsp;of&nbsp;sentences.<br>
+&nbsp;<br>
+Parameters:<br>
+language:&nbsp;The&nbsp;language&nbsp;that&nbsp;this&nbsp;pipeline&nbsp;will&nbsp;be&nbsp;used&nbsp;in.<br>
+&nbsp;<br>
+Returns:<br>
+None.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>name</strong> = 'informative_word_tagger'</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-doc_adjectives_getter"><strong>doc_adjectives_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;adjectives&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;adjectives.</tt></dd></dl>
+ <dl><dt><a name="-doc_adverbs_getter"><strong>doc_adverbs_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;adverbs&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;adverbs.</tt></dd></dl>
+ <dl><dt><a name="-doc_nouns_getter"><strong>doc_nouns_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;nouns&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;nouns.</tt></dd></dl>
+ <dl><dt><a name="-doc_pronouns_getter"><strong>doc_pronouns_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;pronouns&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;pronouns.</tt></dd></dl>
+ <dl><dt><a name="-doc_pronouns_plural_first_person_getter"><strong>doc_pronouns_plural_first_person_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;pronouns_plural_first_person&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;pronouns_plural_first_person.</tt></dd></dl>
+ <dl><dt><a name="-doc_pronouns_plural_second_person_getter"><strong>doc_pronouns_plural_second_person_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;pronouns_plural_second_person&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;pronouns_plural_second_person.</tt></dd></dl>
+ <dl><dt><a name="-doc_pronouns_plural_third_person_getter"><strong>doc_pronouns_plural_third_person_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;pronouns_plural_third_person&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;pronouns_plural_third_person.</tt></dd></dl>
+ <dl><dt><a name="-doc_pronouns_singular_first_person_getter"><strong>doc_pronouns_singular_first_person_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;pronouns&nbsp;singular&nbsp;first&nbsp;person&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;pronouns_singular_first_person.</tt></dd></dl>
+ <dl><dt><a name="-doc_pronouns_singular_second_person_getter"><strong>doc_pronouns_singular_second_person_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;pronouns_singular_second_person&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;pronouns_singular_second_person.</tt></dd></dl>
+ <dl><dt><a name="-doc_pronouns_singular_third_person_getter"><strong>doc_pronouns_singular_third_person_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;pronouns_singular_third_person&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;pronouns_singular_third_person.</tt></dd></dl>
+ <dl><dt><a name="-doc_verbs_getter"><strong>doc_verbs_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; str</dt><dd><tt>Function&nbsp;that&nbsp;returns&nbsp;all&nbsp;verbs&nbsp;for&nbsp;the&nbsp;doc.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;The&nbsp;document&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Yields:<br>
+str:&nbsp;The&nbsp;verbs.</tt></dd></dl>
+</td></tr></table>
+</body></html>

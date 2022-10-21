@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.text_complexity_analyzer</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.text_complexity_analyzer</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/text_complexity_analyzer.py">/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/text_complexity_analyzer.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="multiprocessing.html">multiprocessing</a><br>
+<a href="pickle.html">pickle</a><br>
+</td><td width="25%" valign=top><a href="spacy.html">spacy</a><br>
+<a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="text_complexity_analyzer_cm.utils.html">text_complexity_analyzer_cm.utils</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.text_complexity_analyzer.html#TextComplexityAnalyzer">TextComplexityAnalyzer</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TextComplexityAnalyzer">class <strong>TextComplexityAnalyzer</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#TextComplexityAnalyzer">TextComplexityAnalyzer</a>(language:&nbsp;str&nbsp;=&nbsp;'es',&nbsp;paragraph_delimiter:&nbsp;str&nbsp;=&nbsp;'\n\n',&nbsp;preprocessing_func:&nbsp;Callable&nbsp;=&nbsp;&amp;lt;function&nbsp;<a href="#TextComplexityAnalyzer">TextComplexityAnalyzer</a>.&amp;lt;lambda&amp;gt;&nbsp;at&nbsp;0x7fadcf16ca60&amp;gt;)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;groups&nbsp;all&nbsp;of&nbsp;the&nbsp;indices&nbsp;in&nbsp;order&nbsp;to&nbsp;calculate&nbsp;them&nbsp;in&nbsp;one&nbsp;go.&nbsp;It&nbsp;works&nbsp;for&nbsp;a&nbsp;specific&nbsp;language.<br>
+&nbsp;<br>
+To&nbsp;use&nbsp;this&nbsp;class,&nbsp;instantiate&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;with&nbsp;it.&nbsp;For&nbsp;example:<br>
+tca&nbsp;=&nbsp;<a href="#TextComplexityAnalyzer">TextComplexityAnalyzer</a>('es')<br>
+&nbsp;<br>
+Notice&nbsp;that&nbsp;a&nbsp;short&nbsp;version&nbsp;of&nbsp;the&nbsp;language&nbsp;was&nbsp;passed.&nbsp;The&nbsp;only&nbsp;languages&nbsp;available&nbsp;for&nbsp;now&nbsp;are:&nbsp;'es'.<br>
+&nbsp;<br>
+To&nbsp;calculate&nbsp;the&nbsp;implemented&nbsp;coh-metrix&nbsp;indices&nbsp;for&nbsp;a&nbsp;text,&nbsp;do&nbsp;the&nbsp;following:<br>
+m1,&nbsp;m2,&nbsp;m3,&nbsp;m4,&nbsp;m5,&nbsp;m6,&nbsp;m7,&nbsp;m8&nbsp;=&nbsp;tca.calculate_all_indices_for_one_text(text='Example&nbsp;text',&nbsp;workers=-1)<br>
+&nbsp;<br>
+Here,&nbsp;all&nbsp;available&nbsp;cores&nbsp;will&nbsp;be&nbsp;used&nbsp;to&nbsp;analyze&nbsp;the&nbsp;text&nbsp;passed&nbsp;as&nbsp;parameter.<br>
+&nbsp;<br>
+To&nbsp;predict&nbsp;the&nbsp;category&nbsp;of&nbsp;a&nbsp;text,&nbsp;do&nbsp;the&nbsp;following:<br>
+prediction&nbsp;=&nbsp;tca.<a href="#TextComplexityAnalyzer-predict_text_category">predict_text_category</a>(text='Example&nbsp;text',&nbsp;workers=-1)<br>
+&nbsp;<br>
+The&nbsp;example&nbsp;uses&nbsp;the&nbsp;default&nbsp;classifier&nbsp;stored&nbsp;along&nbsp;the&nbsp;library.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TextComplexityAnalyzer-__init__"><strong>__init__</strong></a>(self, language: str = 'es', paragraph_delimiter: str = '\n\n', preprocessing_func: Callable = &lt;function TextComplexityAnalyzer.&lt;lambda&gt; at 0x7fadcf16ca60&gt;) -&gt; None</dt><dd><tt>This&nbsp;constructor&nbsp;initializes&nbsp;the&nbsp;analizer&nbsp;for&nbsp;a&nbsp;specific&nbsp;language.&nbsp;It&nbsp;initializes&nbsp;all&nbsp;used&nbsp;pipes&nbsp;forthe&nbsp;analysis.<br>
+&nbsp;<br>
+Parameters:<br>
+language(str):&nbsp;The&nbsp;language&nbsp;that&nbsp;the&nbsp;texts&nbsp;are&nbsp;in.<br>
+paragraph_delimiter(str):&nbsp;Separator&nbsp;to&nbsp;consider&nbsp;for&nbsp;the&nbsp;paragraphs.<br>
+&nbsp;<br>
+Returns:<br>
+None.</tt></dd></dl>
+
+<dl><dt><a name="TextComplexityAnalyzer-calculate_all_indices_for_texts"><strong>calculate_all_indices_for_texts</strong></a>(self, texts: List[str], workers: int = -1, batch_size: int = 1) -&gt; List[Dict]</dt><dd><tt>This&nbsp;method&nbsp;calculates&nbsp;all&nbsp;indices&nbsp;for&nbsp;a&nbsp;list&nbsp;of&nbsp;texts&nbsp;using&nbsp;multiprocessing,&nbsp;if&nbsp;available,&nbsp;and&nbsp;stores&nbsp;them&nbsp;in&nbsp;a&nbsp;list&nbsp;of&nbsp;dictionaries.<br>
+&nbsp;<br>
+Parameters:<br>
+texts(List[str]):&nbsp;The&nbsp;texts&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+batch_size(int):&nbsp;Amount&nbsp;of&nbsp;texts&nbsp;that&nbsp;each&nbsp;worker&nbsp;will&nbsp;analyze&nbsp;sequentially&nbsp;until&nbsp;no&nbsp;more&nbsp;texts&nbsp;are&nbsp;left.<br>
+&nbsp;<br>
+Returns:<br>
+List[Dict]:&nbsp;A&nbsp;list&nbsp;with&nbsp;the&nbsp;dictionaries&nbsp;containing&nbsp;the&nbsp;indices&nbsp;for&nbsp;all&nbsp;texts&nbsp;sent&nbsp;for&nbsp;analysis.</tt></dd></dl>
+
+<dl><dt><a name="TextComplexityAnalyzer-load_default_classifier"><strong>load_default_classifier</strong></a>(self) -&gt; None</dt><dd><tt>Method&nbsp;that&nbsp;loads&nbsp;the&nbsp;default&nbsp;classifier&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;text&nbsp;complexity&nbsp;of&nbsp;new&nbsp;texts.</tt></dd></dl>
+
+<dl><dt><a name="TextComplexityAnalyzer-predict_text_category"><strong>predict_text_category</strong></a>(self, texts: List[str], workers: int = -1, batch_size: int = 1, classifier=None, scaler=None, indices: List = None) -&gt; int</dt><dd><tt>This&nbsp;method&nbsp;receives&nbsp;a&nbsp;text&nbsp;and&nbsp;predict&nbsp;its&nbsp;category&nbsp;based&nbsp;on&nbsp;the&nbsp;classification&nbsp;model&nbsp;trained.<br>
+&nbsp;<br>
+Parameters:<br>
+text(List[str]):&nbsp;The&nbsp;list&nbsp;of&nbsp;texts&nbsp;to&nbsp;predict&nbsp;their&nbsp;categories.<br>
+workers(int):&nbsp;Amount&nbsp;of&nbsp;threads&nbsp;that&nbsp;will&nbsp;complete&nbsp;this&nbsp;operation.&nbsp;If&nbsp;it's&nbsp;-1&nbsp;then&nbsp;all&nbsp;cpu&nbsp;cores&nbsp;will&nbsp;be&nbsp;used.<br>
+batch_size(int):&nbsp;Amount&nbsp;of&nbsp;texts&nbsp;that&nbsp;each&nbsp;worker&nbsp;will&nbsp;analyze&nbsp;sequentially&nbsp;until&nbsp;no&nbsp;more&nbsp;texts&nbsp;are&nbsp;left.<br>
+classifier:&nbsp;Optional.&nbsp;A&nbsp;supervised&nbsp;learning&nbsp;model&nbsp;that&nbsp;implements&nbsp;the&nbsp;'predict'&nbsp;method.&nbsp;If&nbsp;None,&nbsp;the&nbsp;default&nbsp;classifier&nbsp;is&nbsp;used.<br>
+scaler:&nbsp;Optional.&nbsp;A&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;implements&nbsp;the&nbsp;'transform'&nbsp;method&nbsp;that&nbsp;scales&nbsp;the&nbsp;indices&nbsp;of&nbsp;the&nbsp;text&nbsp;to&nbsp;analyze.&nbsp;It&nbsp;must&nbsp;be&nbsp;the&nbsp;same&nbsp;as&nbsp;the&nbsp;one&nbsp;used&nbsp;in&nbsp;the&nbsp;classifier,&nbsp;if&nbsp;a&nbsp;scaler&nbsp;was&nbsp;used.&nbsp;Pass&nbsp;None&nbsp;if&nbsp;no&nbsp;scaler&nbsp;was&nbsp;used&nbsp;during&nbsp;the&nbsp;custom&nbsp;classifier's&nbsp;training.<br>
+indices(List):&nbsp;Optional.&nbsp;Ignored&nbsp;if&nbsp;the&nbsp;default&nbsp;classifier&nbsp;is&nbsp;used.&nbsp;The&nbsp;name&nbsp;indices&nbsp;which&nbsp;the&nbsp;classifier&nbsp;was&nbsp;trained&nbsp;with.&nbsp;They&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;same&nbsp;order&nbsp;as&nbsp;the&nbsp;ones&nbsp;that&nbsp;were&nbsp;used&nbsp;at&nbsp;training&nbsp;and&nbsp;also&nbsp;be&nbsp;the&nbsp;same.&nbsp;<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;The&nbsp;category&nbsp;of&nbsp;the&nbsp;text&nbsp;represented&nbsp;as&nbsp;a&nbsp;number</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ACCEPTED_LANGUAGES</strong> = {'es': 'es_core_news_lg'}<br>
+<strong>BASE_DIRECTORY</strong> = '/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm'<br>
+<strong>Callable</strong> = typing.Callable<br>
+<strong>Dict</strong> = typing.Dict<br>
+<strong>List</strong> = typing.List</td></tr></table>
+</body></html>

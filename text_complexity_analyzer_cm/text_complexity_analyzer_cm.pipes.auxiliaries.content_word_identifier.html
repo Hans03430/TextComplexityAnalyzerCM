@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.pipes.auxiliaries.content_word_identifier</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.pipes.html"><font color="#ffffff">pipes</font></a>.<a href="text_complexity_analyzer_cm.pipes.auxiliaries.html"><font color="#ffffff">auxiliaries</font></a>.content_word_identifier</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/auxiliaries/content_word_identifier.py">/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/auxiliaries/content_word_identifier.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="text_complexity_analyzer_cm.pipes.auxiliaries.content_word_identifier.html#ContentWordIdentifier">ContentWordIdentifier</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ContentWordIdentifier">class <strong>ContentWordIdentifier</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#ContentWordIdentifier">ContentWordIdentifier</a>(nlp:&nbsp;spacy.language.Language)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+Pipe&nbsp;that&nbsp;identifies&nbsp;the&nbsp;content&nbsp;words&nbsp;in&nbsp;a&nbsp;doc.&nbsp;It&nbsp;goes&nbsp;after&nbsp;Paragraphizer.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ContentWordIdentifier-__call__"><strong>__call__</strong></a>(self, doc: spacy.tokens.doc.Doc) -&gt; spacy.tokens.doc.Doc</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;identify&nbsp;the&nbsp;words&nbsp;that&nbsp;are&nbsp;considered&nbsp;alphanumeric.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;A&nbsp;Spacy&nbsp;document.<br>
+&nbsp;<br>
+Returns:<br>
+Doc:&nbsp;The&nbsp;analyzed&nbsp;spacy&nbsp;document.</tt></dd></dl>
+
+<dl><dt><a name="ContentWordIdentifier-__init__"><strong>__init__</strong></a>(self, nlp: spacy.language.Language) -&gt; None</dt><dd><tt>This&nbsp;constructor&nbsp;sets&nbsp;the&nbsp;new&nbsp;extension&nbsp;attributes&nbsp;for&nbsp;Docs.<br>
+&nbsp;<br>
+It&nbsp;adds&nbsp;a&nbsp;list&nbsp;of&nbsp;alphabetic&nbsp;words&nbsp;to&nbsp;each&nbsp;sentence,&nbsp;as&nbsp;well&nbsp;as&nbsp;the&nbsp;count.&nbsp;It&nbsp;also&nbsp;provides&nbsp;the&nbsp;way&nbsp;to&nbsp;obtain&nbsp;those&nbsp;values&nbsp;for&nbsp;the&nbsp;entire&nbsp;Document/Text<br>
+&nbsp;<br>
+Parameters:<br>
+nlp(Language):&nbsp;The&nbsp;spacy&nbsp;model&nbsp;that&nbsp;uses&nbsp;this&nbsp;pipeline<br>
+&nbsp;<br>
+Returns:<br>
+None.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>name</strong> = 'content_word_identifier'</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-doc_content_words_getter"><strong>doc_content_words_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; Iterator</dt><dd><tt>Function&nbsp;that&nbsp;gets&nbsp;the&nbsp;content&nbsp;words&nbsp;for&nbsp;the&nbsp;entire&nbsp;text.}<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;Spacy&nbsp;document&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+&nbsp;<br>
+Yields:<br>
+Iterator:&nbsp;Each&nbsp;content&nbsp;word&nbsp;as&nbsp;Tokens.</tt></dd></dl>
+ <dl><dt><a name="-doc_content_words_normalized_getter"><strong>doc_content_words_normalized_getter</strong></a>(doc: spacy.tokens.doc.Doc) -&gt; Iterator</dt><dd><tt>Function&nbsp;that&nbsp;gets&nbsp;the&nbsp;content&nbsp;words&nbsp;for&nbsp;the&nbsp;entire&nbsp;text,&nbsp;all&nbsp;in&nbsp;lowercase&nbsp;and&nbsp;as&nbsp;a&nbsp;string.<br>
+&nbsp;<br>
+Parameters:<br>
+doc(Doc):&nbsp;Spacy&nbsp;document&nbsp;to&nbsp;be&nbsp;analyzed.<br>
+&nbsp;<br>
+Yields:<br>
+Iterator:&nbsp;Each&nbsp;content&nbsp;word&nbsp;as&nbsp;strings.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>Iterator</strong> = typing.Iterator</td></tr></table>
+</body></html>

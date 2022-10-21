@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module text_complexity_analyzer_cm.pipes.spanish.overlap_analyzers</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="text_complexity_analyzer_cm.html"><font color="#ffffff">text_complexity_analyzer_cm</font></a>.<a href="text_complexity_analyzer_cm.pipes.html"><font color="#ffffff">pipes</font></a>.<a href="text_complexity_analyzer_cm.pipes.spanish.html"><font color="#ffffff">spanish</font></a>.overlap_analyzers</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/spanish/overlap_analyzers.py">/home/hans/Documentos/Tutorials/Python/TextComplexityAnalyzerCM/text_complexity_analyzer_cm/pipes/spanish/overlap_analyzers.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="text_complexity_analyzer_cm.utils.html">text_complexity_analyzer_cm.utils</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-analyze_anaphore_overlap"><strong>analyze_anaphore_overlap</strong></a>(prev_sentence: spacy.tokens.span.Span, cur_sentence: spacy.tokens.span.Span, language: str = 'es') -&gt; int</dt><dd><tt>This&nbsp;function&nbsp;analyzes&nbsp;whether&nbsp;or&nbsp;not&nbsp;there's&nbsp;anaphore&nbsp;overlap&nbsp;between&nbsp;two&nbsp;sentences.<br>
+&nbsp;<br>
+Parameters:<br>
+prev_sentence(Span):&nbsp;The&nbsp;previous&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+cur_sentence(Span):&nbsp;The&nbsp;current&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+language(str):&nbsp;The&nbsp;language&nbsp;of&nbsp;the&nbsp;sentences.<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;1&nbsp;if&nbsp;there's&nbsp;overlap&nbsp;between&nbsp;the&nbsp;two&nbsp;sentences&nbsp;and&nbsp;0&nbsp;if&nbsp;no.</tt></dd></dl>
+ <dl><dt><a name="-analyze_argument_overlap"><strong>analyze_argument_overlap</strong></a>(prev_sentence: spacy.tokens.span.Span, cur_sentence: spacy.tokens.span.Span) -&gt; int</dt><dd><tt>This&nbsp;function&nbsp;analyzes&nbsp;whether&nbsp;or&nbsp;not&nbsp;there's&nbsp;argument&nbsp;overlap&nbsp;between&nbsp;two&nbsp;sentences.<br>
+&nbsp;<br>
+Parameters:<br>
+prev_sentence(Span):&nbsp;The&nbsp;previous&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+cur_sentence(Span):&nbsp;The&nbsp;current&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;1&nbsp;if&nbsp;there's&nbsp;overlap&nbsp;between&nbsp;the&nbsp;two&nbsp;sentences&nbsp;and&nbsp;0&nbsp;if&nbsp;no.</tt></dd></dl>
+ <dl><dt><a name="-analyze_content_word_overlap"><strong>analyze_content_word_overlap</strong></a>(prev_sentence: spacy.tokens.span.Span, cur_sentence: spacy.tokens.span.Span) -&gt; float</dt><dd><tt>This&nbsp;function&nbsp;calculates&nbsp;the&nbsp;proportional&nbsp;content&nbsp;word&nbsp;overlap&nbsp;between&nbsp;two&nbsp;sentences.<br>
+&nbsp;<br>
+Parameters:<br>
+prev_sentence(Span):&nbsp;The&nbsp;previous&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+cur_sentence(Span):&nbsp;The&nbsp;current&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Returns:<br>
+float:&nbsp;Proportion&nbsp;of&nbsp;tokens&nbsp;that&nbsp;overlap&nbsp;between&nbsp;the&nbsp;current&nbsp;and&nbsp;previous&nbsp;sentences</tt></dd></dl>
+ <dl><dt><a name="-analyze_noun_overlap"><strong>analyze_noun_overlap</strong></a>(prev_sentence: spacy.tokens.span.Span, cur_sentence: spacy.tokens.span.Span) -&gt; int</dt><dd><tt>This&nbsp;function&nbsp;analyzes&nbsp;whether&nbsp;or&nbsp;not&nbsp;there's&nbsp;noun&nbsp;overlap&nbsp;between&nbsp;two&nbsp;sentences&nbsp;for&nbsp;a&nbsp;language.<br>
+&nbsp;<br>
+Parameters:<br>
+prev_sentence(Span):&nbsp;The&nbsp;previous&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+cur_sentence(Span):&nbsp;The&nbsp;current&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;1&nbsp;if&nbsp;there's&nbsp;overlap&nbsp;between&nbsp;the&nbsp;two&nbsp;sentences&nbsp;and&nbsp;0&nbsp;if&nbsp;no.</tt></dd></dl>
+ <dl><dt><a name="-analyze_stem_overlap"><strong>analyze_stem_overlap</strong></a>(prev_sentence: spacy.tokens.span.Span, cur_sentence: spacy.tokens.span.Span) -&gt; int</dt><dd><tt>This&nbsp;function&nbsp;analyzes&nbsp;whether&nbsp;or&nbsp;not&nbsp;there's&nbsp;stem&nbsp;overlap&nbsp;between&nbsp;two&nbsp;sentences.<br>
+&nbsp;<br>
+Parameters:<br>
+prev_sentence(Span):&nbsp;The&nbsp;previous&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+cur_sentence(Span):&nbsp;The&nbsp;current&nbsp;sentence&nbsp;to&nbsp;analyze.<br>
+&nbsp;<br>
+Returns:<br>
+int:&nbsp;1&nbsp;if&nbsp;there's&nbsp;overlap&nbsp;between&nbsp;the&nbsp;two&nbsp;sentences&nbsp;and&nbsp;0&nbsp;if&nbsp;no.</tt></dd></dl>
+</td></tr></table>
+</body></html>
